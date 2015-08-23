@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sql", "sql.csproj", "{D2383C17-0D82-41B0-8C18-A14253C050C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusResult", "..\StatusResult\StatusResult.csproj", "{0FE8C023-8694-4E19-9FB0-EA38E5B8798B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2383C17-0D82-41B0-8C18-A14253C050C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2383C17-0D82-41B0-8C18-A14253C050C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2383C17-0D82-41B0-8C18-A14253C050C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2383C17-0D82-41B0-8C18-A14253C050C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FE8C023-8694-4E19-9FB0-EA38E5B8798B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FE8C023-8694-4E19-9FB0-EA38E5B8798B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FE8C023-8694-4E19-9FB0-EA38E5B8798B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FE8C023-8694-4E19-9FB0-EA38E5B8798B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
