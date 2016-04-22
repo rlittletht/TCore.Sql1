@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
@@ -1157,33 +1158,55 @@ namespace TCore
 		Sql m_sql;
 		SqlDataReader m_sqlr;
 		bool m_fAttached;
+	    private Guid m_crids;
 
 		SR m_sr;
 
-		public SqlReader()
-		{
-			m_fAttached = false;
-		}
+        public SqlReader()
+        {
+            m_fAttached = false;
+            m_crids = Guid.Empty;
+        }
 
-		public SqlReader(Sql sql)
-		{
-			Attach(sql);
-		}
+        public SqlReader(Guid crids)
+        {
+            m_fAttached = false;
+            m_crids = crids;
+        }
 
-		/* A T T A C H */
-		/*----------------------------------------------------------------------------
+        public SqlReader(Sql sql)
+        {
+            Attach(sql);
+            m_crids = Guid.Empty;
+        }
+
+        public SqlReader(Sql sql, Guid crids)
+        {
+            Attach(sql);
+            m_crids = crids;
+        }
+
+        /* A T T A C H */
+        /*----------------------------------------------------------------------------
 			%%Function: Attach
 			%%Qualified: tw.twsvc:SqlReader.Attach
 			%%Contact: rlittle
 
 		----------------------------------------------------------------------------*/
-		public void Attach(Sql sql)
+        public void Attach(Sql sql)
 		{
 			m_sql = sql;
 			if (m_sql != null)
 				m_fAttached = true;
 		}
 
+	    /* F  E X E C U T E  Q U E R Y */
+	    /*----------------------------------------------------------------------------
+	    	%%Function: FExecuteQuery
+	    	%%Qualified: TCore.SqlReader.FExecuteQuery
+	    	%%Contact: rlittle
+	    	
+	    ----------------------------------------------------------------------------*/
 	    public bool FExecuteQuery(string sQuery, string sResourceConnString)
 	    {
 	        SR sr = ExecuteQuery(sQuery, sResourceConnString);
@@ -1203,6 +1226,7 @@ namespace TCore
 			if (m_sql == null)
 				{
 				m_sr = Sql.OpenConnection(out m_sql, sResourceConnString);
+				m_sr.CorrelationID = m_crids;
 				m_fAttached = false;
 				}
 
@@ -1222,10 +1246,11 @@ namespace TCore
 				m_sqlr = sqlcmd.ExecuteReader();
 				}
 			catch (Exception exc)
-				{
-				throw new Exception(String.Format("ExcuteReader failed on query: {0}; {1}: {2}", sQuery, exc.Message, exc.StackTrace));
-                }
-			return SR.Success();
+			    {
+			    return SR.FailedCorrelate(String.Format("ExcuteReader failed on query: {0}; {1}: {2}", sQuery, exc.Message, exc.StackTrace), m_crids);
+			    }
+
+			return SR.SuccessCorrelate(m_crids);
 		}
 
 		/* C L O S E */
