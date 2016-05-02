@@ -66,8 +66,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\..\SmokingLove\TcRec\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\tw2\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -86,6 +86,14 @@
     <ProjectReference Include="..\StatusResult\StatusResult.csproj">
       <Project>{0fe8c023-8694-4e19-9fb0-ea38e5b8798b}</Project>
       <Name>StatusResult</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TCore.Exceptions\TCore.Exceptions.csproj">
+      <Project>{cc88c933-98af-4c54-832a-1c4f587aaa54}</Project>
+      <Name>TCore.Exceptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TCore.Logging\Logging.csproj">
+      <Project>{EE681C45-8416-4DE7-9E62-AE1371A7DE9A}</Project>
+      <Name>Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
