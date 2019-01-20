@@ -5,7 +5,10 @@ Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading re
 
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
 ```
-SELECT 
+SELECT Foo.Data1, Foo.Data2, Bar.Data3
+  FROM TableFoo AS Foo
+  INNER JOIN TableBar Bar
+    ON Foo.FooKey
 ```
 
 
@@ -13,5 +16,6 @@ SELECT
 If you are interactively building a query and just need to create an alias on-the-fly, use `SqlWhere::AddAlias(string sTable)`, which will create an alias unique to 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0ODIwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbLTE3NzgwNDY2MTgsLTE0ODIwMjY1ODVdfQ
+==
 -->
