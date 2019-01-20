@@ -14,11 +14,13 @@ Consider the above query, but you dynamically want to construct the selection cr
 ```
 static string s_sSelectBase = "SELECT Foo.Data1, Foo.Data2, Bar.Data3 FROM TableFoo AS Foo INNER JOIN TableBar Bar ON Foo.FooKey = Bar.BarKey";
 ```
-but later in code, when you go to append the query string, you have to manage all those aliases. Even worse, what if you have shared code that wants to generate the condition. You have to enforce the same aliases throughout your 
+but later in code, when you go to append the query string, you have to manage all those aliases. Even worse, what if you have shared code that wants to generate the condition. You have to enforce the same aliases throughout your code.
+`SqlWhere` allows you to use the underlying table name as a constant (`"$$TableFoo$$"`) and remaps dynamically to a given (or generated) alias.
+```SqlWhere.AddAlias`
 
 
 If you are interactively building a query and just need to create an alias on-the-fly, use `SqlWhere::AddAlias(string sTable)`, which will create an alias unique to 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA2MDczMjE1MywtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbMTkwNzc4NDA1NSwtMTQ4MjAyNjU4NV19
 -->
