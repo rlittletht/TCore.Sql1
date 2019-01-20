@@ -5,8 +5,12 @@ Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading re
 
 Once created, you build up the Where clause using `Add`, `AddSubclause`, grouping, etc. When you are done constructing the where clause, you can get the full Where clause using `GetWhere`.
 ### Construction
-You construct the where clause piece by piece. By default, the clause is empty. 
-
+You construct the where clause piece by piece. By default, the clause is empty.
+```
+SqlWhere.GetWhere(string sBase)
+```
+Given a base string (e.g. `"SELECT * FROM Table"`), return the entire, properly formatted clause.
+If there are no conditions, then there w
 
 
 ### Aliases
@@ -46,5 +50,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTYwNzI2NjY0LC0xNDgyMDI2NTg1XX0=
+eyJoaXN0b3J5IjpbNjUxMTU0MTMsOTYwNzI2NjY0LC0xNDgyMD
+I2NTg1XX0=
 -->
