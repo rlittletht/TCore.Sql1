@@ -27,6 +27,10 @@ There are several things currently implemented poorly.
 		sqls.Where.EndGroup();
 	}
 	
+	SqlWhere swInnerJoin = new SqlWhere();
+	swInnerJoin.AddAliases(mpAliases);
+	swInnerJoin.Add("
+
 	sqlCommand.CommandText = sqls.ToString();
 ```
 
@@ -146,7 +150,7 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEwODgzMjM2NywtNTcwOTA3ODIwLC0xNz
-Q2MzgyNTkyLC01MjA1MjUyNzQsOTYwNzI2NjY0LC0xNDgyMDI2
-NTg1XX0=
+eyJoaXN0b3J5IjpbMTkwMzU1NDkwNSwxMTA4ODMyMzY3LC01Nz
+A5MDc4MjAsLTE3NDYzODI1OTIsLTUyMDUyNTI3NCw5NjA3MjY2
+NjQsLTE0ODIwMjY1ODVdfQ==
 -->
