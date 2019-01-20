@@ -22,7 +22,8 @@ Adds the given condition to the clause. The condition is expected to be properly
 	sw.Add("$$tbl_foo$$.Value1 = 'match', Op.And);
 ```
 Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
-
+### SqlSelect
+There are rare situations when you 
 ### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
 ```
@@ -60,6 +61,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTUyMDUyNTI3NCw5NjA3MjY2NjQsLTE0OD
-IwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbLTM0MTA4NzQzMSwtNTIwNTI1Mjc0LDk2MD
+cyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
