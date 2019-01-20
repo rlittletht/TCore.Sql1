@@ -10,6 +10,7 @@ namespace TCore
         private string m_sBase;
         private SqlWhere m_sw;
         private string m_sOrderBy;
+        string m_sGroupBy;
 
         public override string ToString()
         {
@@ -33,8 +34,22 @@ namespace TCore
 
             string sBaseForWhere = sb.ToString();
 
-            return String.Format("{0} {1}", m_sw.GetWhere(sBaseForWhere),
-                m_sOrderBy == null ? "" : m_sw.ExpandAliases(m_sOrderBy));
+            sb = new StringBuilder(256);
+
+            sb.Append(m_sw.GetWhere(sBaseForWhere));
+            if (m_sOrderBy != null)
+            {
+                sb.Append(" ORDER BY ");
+                sb.Append(m_sw.ExpandAliases(m_sOrderBy));
+            }
+
+            if (m_sGroupBy != null)
+            {
+                sb.Append(" GROUP BY ");
+                sb.Append(m_sw.ExpandAliases(m_sGroupBy));
+            }
+
+            return sb.ToString();
         }
 
         public SqlSelect(string sBase)
@@ -78,6 +93,20 @@ namespace TCore
         public void AddInnerJoin(SqlInnerJoin ij)
         {
             m_plij.Add(ij);
+        }
+
+
+        /* A D D  G R O U P  B Y */
+        /*----------------------------------------------------------------------------
+			%%Function: AddGroupBy
+
+			add a group by clause, expanding aliases.			
+		----------------------------------------------------------------------------*/
+        public void AddGroupBy(string s)
+        {
+            s = m_sw.ExpandAliases(s);
+
+            m_sGroupBy = s;
         }
 
     }
