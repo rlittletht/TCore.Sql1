@@ -24,8 +24,14 @@ Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
 #### StartGroup / EndGroup
 ```
 	// SqlWhere.StartGroup(Op op)
-	// SqlWhere.EndGroup
+	// SqlWhere.EndGroup()
+
+	sw.StartGroup(Op.Or);
+	sw.Add("$$tbl_foo$$.Value1 = 'match1'", Op.And);
+	sw.Add("$$tbl_foo$$.Value2 = 'match2'", Op.And);
+	sw.EndGroup()
 ```
+Allows grouping of criteria to allow proper 
 ### SqlSelect
 There are situations when you want to represent an entire T-SQL SELECT statement with an object. Typically this is because you want to use this as a clause in another select statement, or this could be used to represent the entire SELECT statement you are building.
 #### SqlSelect
@@ -92,6 +98,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk2ODIzMzg2OCwtNTIwNTI1Mjc0LDk2MD
+eyJoaXN0b3J5IjpbLTEyODA5NjkwMCwtNTIwNTI1Mjc0LDk2MD
 cyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
