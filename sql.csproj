@@ -18,6 +18,12 @@
     <RepositoryUrl>https://github.com/rlittletht/TCore.Sql</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/rlittletht/TCore.Sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <PackageReleaseNotes>BREAKING CHANGES:
+Moved AddOrderBy from SqlWhere to SqlSelect
+Moved AddInnerJoin from SqlWhere to SqlSelect
+Changed AddOrderBy to automatically generate "ORDER BY" (callers should no longer include "ORDER BY" when they call AddOrderBy)</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +56,7 @@
   <ItemGroup>
     <PackageReference Include="TCore.Exceptions" Version="1.0.0" />
   </ItemGroup>
-  <ItemGroup  Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PackageReference Include="NUnit" Version="3.11.0" />
   </ItemGroup>
 </Project>
