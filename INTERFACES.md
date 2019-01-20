@@ -3,6 +3,7 @@ Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading re
 ## SqlWhere
 `TCore.SqlWhere` provides basic query building services.
 
+### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
 ```
 	SELECT Foo.Data1, Foo.Data2, Bar.Data3
@@ -16,7 +17,7 @@ static string s_sSelectBase = "SELECT Foo.Data1, Foo.Data2, Bar.Data3 FROM Table
 ```
 but later in code, when you go to append the query string, you have to manage all those aliases. Even worse, what if you have shared code that wants to generate the condition. You have to enforce the same aliases throughout your code.
 `SqlWhere` allows you to use the underlying table name as a constant (`"$$TableFoo$$"`) and remaps dynamically to a given (or generated) alias.
-### AddAlias
+#### AddAlias
 `SqlWhere.AddAlias(string sTableName)` takes a table name and returns  an alias unique to the `SqlWhere` clause:
 ```
 	SqlWhere sw = new SqlWhere();
@@ -25,26 +26,19 @@ but later in code, when you go to append the query string, you have to manage al
 	string s3 = sw.AddAlias("TableFoo"); // s3 == "S2"
 ```
 Note that subsequent duplicate requests will yield new aliases. This is essentially unsupported
-### AddAliases
+#### AddAliases
 More likely, you will want to define a bunch of aliases upfront in the code and just use those in the clauses. You can statically define a set of aliases and add them all at once with `AddAliases`
 ```
-        public static Dictionary<string, string> s_mpDataAliasInner = new Dictionary<string, string>
+        public static Dictionary<string, string> s_mpAliases = new Dictionary<string, string>
         {
             { "TableFoo", "Foo" },
             { "TableBar", "Bar" }
         };
         ...
         SqlWhere sw = new SqlWhere();
-        sw.AddAliases(s_mpAliases
-
+        sw.AddAliases(s_mpAliases);
 ```
 
-
-
-
-If you are interactively building a query and just need to create an alias on-the-fly, use `SqlWhere::AddAlias(string sTable)`, which will create an alias unique to 
-
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1NDcxNDg3MDksLTE0ODIwMjY1ODVdfQ
-==
+eyJoaXN0b3J5IjpbMTE1NzY0MDI3NiwtMTQ4MjAyNjU4NV19
 -->
