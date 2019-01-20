@@ -34,8 +34,11 @@ Valid enum values for `Op` are `And, AndNot, Or, OrNot`. **NOTE**: the first add
 Allows grouping of criteria to allow proper order of operation evaluation.
 #### AddSubclause
 ```
+	// SqlWhere.AddSubclause(string sFormat, SqlSelect select, Op op)
 
+	sw.AddSubclause("$$tbl_foo$$.MyKey in {0}", select, Op.And)
 ```
+Takes an already created `SqlSelect` object and adds that as a subclause. In this example, the given SELECT 
 ### SqlSelect
 There are situations when you want to represent an entire T-SQL SELECT statement with an object. Typically this is because you want to use this as a clause in another select statement, or this could be used to represent the entire SELECT statement you are building.
 #### SqlSelect
@@ -110,6 +113,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5MzA1NzA1OTgsLTUyMDUyNTI3NCw5Nj
-A3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbMjAxNTc2NzQyNiwtNTIwNTI1Mjc0LDk2MD
+cyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
