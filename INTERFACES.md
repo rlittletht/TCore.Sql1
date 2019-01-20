@@ -24,7 +24,10 @@ but later in code, when you go to append the query string, you have to manage al
 	string s2 = sw.AddAlias("TableBar"); // s2 == "S1"
 	string s3 = sw.AddAlias("TableFoo"); // s3 == "S2"
 ```
-
+Note that subsequent duplicate requests will yield new aliases. This is essentially unsupported
+### AddAliases
+More likely, you will want to define a bunch of aliases upfront in the code and just use those in the clauses. You can statically define a set of aliases and add them all at once with `AddAliases`
+```
 
 
 
@@ -33,6 +36,5 @@ but later in code, when you go to append the query string, you have to manage al
 If you are interactively building a query and just need to create an alias on-the-fly, use `SqlWhere::AddAlias(string sTable)`, which will create an alias unique to 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2NjI5NjQyMDgsLTE0ODIwMjY1ODVdfQ
-==
+eyJoaXN0b3J5IjpbMTQ4Mjk5MzY5MCwtMTQ4MjAyNjU4NV19
 -->
