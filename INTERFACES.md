@@ -30,12 +30,12 @@ There are several things currently implemented poorly.
 	SqlWhere swInnerJoin = new SqlWhere();
 	swInnerJoin.AddAliases(mpAliases);
 	swInnerJoin.Add("$$tbl_foo$$.FooKey = $$tbl_bar$$.BarKey", Op.And);
-	sqls.Where.AddInnerJoin(
+	sqls.Where.AddInnerJoin("$$#tbl_bar$$", swInnerJoin);
 
 	sqlCommand.CommandText = sqls.ToString();
 ```
 
-This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax.
+This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax. This will also properly include the InnerJoin. **NOTE: this is not the right design for adding inner join, but its what we have right now**
 
 
 ## SqlWhere
@@ -151,7 +151,7 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwNDQxNTE0MTMsMTEwODgzMjM2NywtNT
-cwOTA3ODIwLC0xNzQ2MzgyNTkyLC01MjA1MjUyNzQsOTYwNzI2
-NjY0LC0xNDgyMDI2NTg1XX0=
+eyJoaXN0b3J5IjpbOTAwNzgyNjk0LC0xMDQ0MTUxNDEzLDExMD
+g4MzIzNjcsLTU3MDkwNzgyMCwtMTc0NjM4MjU5MiwtNTIwNTI1
+Mjc0LDk2MDcyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
