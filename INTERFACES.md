@@ -4,9 +4,11 @@ Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading re
 `TCore.SqlWhere` provides basic query building services.
 
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
-If you are interactively building a query and just need to create
-`SqlWhere::AddAlias(string sTable)`
+
+
+
+If you are interactively building a query and just need to create an alias on-the-fly, use `SqlWhere::AddAlias(string sTable)`, which will create an alias unique to 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU4NzU2ODcxMl19
+eyJoaXN0b3J5IjpbLTYzNzQ5OTQ2MV19
 -->
