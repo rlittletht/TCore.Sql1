@@ -3,6 +3,12 @@ Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading re
 ## SqlWhere
 `TCore.SqlWhere` provides basic query building services.
 
+Once created, you build up the Where clause using `Add`, `AddSubclause`, grouping, etc. When you are done constructing the where clause, you can get the full Where clause using `GetWhere`.
+### Construction
+The basic operatinos
+
+
+
 ### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
 ```
@@ -40,5 +46,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE1NzY0MDI3NiwtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbLTcxNDAxOTM2NCwtMTQ4MjAyNjU4NV19
 -->
