@@ -15,21 +15,13 @@ Given a base string (e.g. `"SELECT * FROM Table"`),  will return the entire, pro
 If there are no conditions, then the WHERE clause will be completely omitted. NOTE: If there are any aliases in the base string (e.g. `"$$table_foo$$"`), they will be expanded to the proper alias.
 #### SqlWhere.Add
 ```
-	public  enum  Op
-	{
-		And,
-		AndNot,
-		Or,
-		OrNot
-	}
-	
 	SqlWhere.Add(string s, Op op)
 ```
 Adds the given condition to the clause. The condition is expected to be properly formed, and can contain aliases:
 ```
 	sw.Add("$$tbl_foo$$.Value1 = 'match', Op.And);
 ```
-
+Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
 
 ### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
@@ -68,6 +60,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjkwODA3ODAyLDk2MDcyNjY2NCwtMTQ4Mj
-AyNjU4NV19
+eyJoaXN0b3J5IjpbLTUyMDUyNTI3NCw5NjA3MjY2NjQsLTE0OD
+IwMjY1ODVdfQ==
 -->
