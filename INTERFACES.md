@@ -29,7 +29,8 @@ There are several things currently implemented poorly.
 	
 	SqlWhere swInnerJoin = new SqlWhere();
 	swInnerJoin.AddAliases(mpAliases);
-	swInnerJoin.Add("
+	swInnerJoin.Add("$$tbl_foo$$.FooKey = $$tbl_bar$$.BarKey", Op.And);
+	sqls.Where.AddInnerJoin(
 
 	sqlCommand.CommandText = sqls.ToString();
 ```
@@ -150,7 +151,7 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTkwMzU1NDkwNSwxMTA4ODMyMzY3LC01Nz
-A5MDc4MjAsLTE3NDYzODI1OTIsLTUyMDUyNTI3NCw5NjA3MjY2
-NjQsLTE0ODIwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbLTEwNDQxNTE0MTMsMTEwODgzMjM2NywtNT
+cwOTA3ODIwLC0xNzQ2MzgyNTkyLC01MjA1MjUyNzQsOTYwNzI2
+NjY0LC0xNDgyMDI2NTg1XX0=
 -->
