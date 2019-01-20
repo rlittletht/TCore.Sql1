@@ -28,7 +28,16 @@ Note that subsequent duplicate requests will yield new aliases. This is essentia
 ### AddAliases
 More likely, you will want to define a bunch of aliases upfront in the code and just use those in the clauses. You can statically define a set of aliases and add them all at once with `AddAliases`
 ```
+        public static Dictionary<string, string> s_mpDataAliasInner = new Dictionary<string, string>
+        {
+            { "TableFoo", "Foo" },
+            { "TableBar", "Bar" }
+        };
+        ...
+        SqlWhere sw = new SqlWhere();
+        sw.AddAliases(s_mpAliases
 
+```
 
 
 
@@ -36,5 +45,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 If you are interactively building a query and just need to create an alias on-the-fly, use `SqlWhere::AddAlias(string sTable)`, which will create an alias unique to 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQ4Mjk5MzY5MCwtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbLTE1NDcxNDg3MDksLTE0ODIwMjY1ODVdfQ
+==
 -->
