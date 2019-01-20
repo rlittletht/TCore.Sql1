@@ -1,18 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace TCore
 {
     public class SqlSelect
     {
+        List<SqlInnerJoin> m_plij = new List<SqlInnerJoin>();
         private string m_sBase;
         private SqlWhere m_sw;
         private string m_sOrderBy;
+        string m_sGroupBy;
 
         public override string ToString()
         {
-            return String.Format("{0} {1}", m_sw.GetWhere(m_sBase),
-                m_sOrderBy == null ? "" : m_sw.ExpandAliases(m_sOrderBy));
+            string sBase = m_sBase;
+
+            if (sBase == null)
+                sBase = "";
+
+            StringBuilder sb = new StringBuilder(256);
+
+            sb.Append(m_sw.ExpandAliases(sBase));
+
+            if (m_plij != null)
+            {
+                foreach (SqlInnerJoin ij in m_plij)
+                {
+                    sb.Append(" ");
+                    sb.Append(m_sw.ExpandAliases(ij.ToString()));
+                }
+            }
+
+            string sBaseForWhere = sb.ToString();
+
+            sb = new StringBuilder(256);
+
+            sb.Append(m_sw.GetWhere(sBaseForWhere));
+            if (m_sOrderBy != null)
+            {
+                sb.Append(" ORDER BY ");
+                sb.Append(m_sw.ExpandAliases(m_sOrderBy));
+            }
+
+            if (m_sGroupBy != null)
+            {
+                sb.Append(" GROUP BY ");
+                sb.Append(m_sw.ExpandAliases(m_sGroupBy));
+            }
+
+            return sb.ToString();
         }
 
         public SqlSelect(string sBase)
@@ -52,5 +89,25 @@ namespace TCore
         {
             get { return m_sw; }
         }
+
+        public void AddInnerJoin(SqlInnerJoin ij)
+        {
+            m_plij.Add(ij);
+        }
+
+
+        /* A D D  G R O U P  B Y */
+        /*----------------------------------------------------------------------------
+			%%Function: AddGroupBy
+
+			add a group by clause, expanding aliases.			
+		----------------------------------------------------------------------------*/
+        public void AddGroupBy(string s)
+        {
+            s = m_sw.ExpandAliases(s);
+
+            m_sGroupBy = s;
+        }
+
     }
 }

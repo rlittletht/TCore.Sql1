@@ -12,9 +12,7 @@ namespace TCore
     public class SqlWhere
     {
         Dictionary<string, string> m_mpAliases = new Dictionary<string, string>();
-        List<SqlInnerJoin> m_plij = new List<SqlInnerJoin>();
         List<Clause> m_plc;
-        string m_sGroupBy;
 
         public enum Op
         {
@@ -196,34 +194,6 @@ namespace TCore
             return s;
         }
 
-        /* A D D  I N N E R  J O I N */
-        /*----------------------------------------------------------------------------
-			%%Function: AddInnerJoin
-			%%Qualified: BhSvc.SqlWhere.AddInnerJoin
-			%%Contact: rlittle
-
-			add an inner join			
-		----------------------------------------------------------------------------*/
-        public void AddInnerJoin(SqlInnerJoin ij)
-        {
-            m_plij.Add(ij);
-        }
-
-        /* A D D  G R O U P  B Y */
-        /*----------------------------------------------------------------------------
-			%%Function: AddGroupBy
-			%%Qualified: BhSvc.SqlWhere.AddGroupBy
-			%%Contact: rlittle
-
-			add a group by clause, expanding aliases.			
-		----------------------------------------------------------------------------*/
-        public void AddGroupBy(string s)
-        {
-            s = ExpandAliases(s);
-
-            m_sGroupBy = s;
-        }
-
         /* A D D */
         /*----------------------------------------------------------------------------
 			%%Function: Add
@@ -278,26 +248,11 @@ namespace TCore
 
             sb.Append(ExpandAliases(sBase));
 
-            if (m_plij != null)
-            {
-                foreach (SqlInnerJoin ij in m_plij)
-                {
-                    sb.Append(" ");
-                    sb.Append(ExpandAliases(ij.ToString()));
-                }
-            }
-
             if (m_plc.Count == 0)
                 return sb.ToString();
 
             sb.Append(" WHERE ");
             sb.Append(GetClause());
-
-            if (m_sGroupBy != null)
-            {
-                sb.Append(" GROUP BY ");
-                sb.Append(ExpandAliases(m_sGroupBy));
-            }
 
             return sb.ToString();
         }
@@ -444,7 +399,7 @@ namespace TCore
             [Test]
             public void SelectUnitTest()
             {
-                String sExpected = "SELECT foo FROM bar WHERE   baz=boo ";
+                String sExpected = "SELECT foo FROM bar WHERE   baz=boo";
                 SqlSelect sqls = new SqlSelect("SELECT foo FROM bar");
 
                 sqls.Where.Add("baz=boo", Op.And);
@@ -457,7 +412,7 @@ namespace TCore
                 String sExpected = "SELECT foo FROM bar WHERE   baz=boo ORDER BY foo DESC";
                 SqlSelect sqls = new SqlSelect("SELECT foo FROM bar");
 
-                sqls.AddOrderBy("ORDER BY foo DESC");
+                sqls.AddOrderBy("foo DESC");
                 sqls.Where.Add("baz=boo", Op.And);
                 Assert.AreEqual(sExpected, sqls.ToString());
             }
@@ -465,7 +420,7 @@ namespace TCore
             [Test]
             public void SelectUnitTest_Aliases()
             {
-                String sExpected = "SELECT AI.foo FROM alias1 AI WHERE   AI.baz=boo ";
+                String sExpected = "SELECT AI.foo FROM alias1 AI WHERE   AI.baz=boo";
                 Dictionary<string, string> mpAliases = new Dictionary<string, string>
                 {
                     {"alias1", "AI"},
@@ -488,7 +443,7 @@ namespace TCore
                 };
                 SqlSelect sqls = new SqlSelect("SELECT $$alias1$$.foo FROM $$#alias1$$", mpAliases);
 
-                sqls.AddOrderBy("ORDER BY $$alias1$$.foo DESC");
+                sqls.AddOrderBy("$$alias1$$.foo DESC");
                 sqls.Where.Add("$$alias1$$.baz=boo", Op.And);
                 Assert.AreEqual(sExpected, sqls.ToString());
             }
@@ -496,7 +451,7 @@ namespace TCore
             [Test]
             public void SubclauseUnitTest()
             {
-                string sExpected = "base WHERE   A=(SELECT foo FROM bar WHERE   baz=boo )";
+                string sExpected = "base WHERE   A=(SELECT foo FROM bar WHERE   baz=boo)";
                 SqlSelect sqlsInner = new SqlSelect("SELECT foo FROM bar");
                 SqlWhere sqlwOuter = new SqlWhere();
 
@@ -507,13 +462,13 @@ namespace TCore
             }
 
             [TestCase(true, true,
-                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE   FOO.Match1 = 'Match1' OR (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
+                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE   FOO.Match1 = 'Match1' OR (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2') ")]
             [TestCase(true, false,
-                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE   FOO.Match1 = 'Match1' ")]
+                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE   FOO.Match1 = 'Match1'")]
             [TestCase(false, true,
-                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
+                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2') ")]
             [TestCase(false, false,
-                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey ")]
+                "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey")]
             [Test]
             public void TestOptionalWhereBoth(bool fFirstClause, bool fSecondClause, string sExpected)
             {
@@ -527,7 +482,7 @@ namespace TCore
                 string sBaseQuery = "SELECT $$tbl_foo$$.FooValue, $$tbl_bar$$.BarValue FROM $$#tbl_foo$$";
 
                 SqlSelect sqls = new SqlSelect(sBaseQuery, mpAliases);
-                Assert.AreEqual("SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO ", sqls.ToString());
+                Assert.AreEqual("SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO", sqls.ToString());
 
                 if (fFirstClause)
                     sqls.Where.Add("$$tbl_foo$$.Match1 = 'Match1'", Op.And);
@@ -543,7 +498,7 @@ namespace TCore
                 SqlWhere swInnerJoin = new SqlWhere();
                 swInnerJoin.AddAliases(mpAliases);
                 swInnerJoin.Add("$$tbl_foo$$.FooKey = $$tbl_bar$$.BarKey", Op.And);
-                sqls.Where.AddInnerJoin(new SqlInnerJoin("$$#tbl_bar$$", swInnerJoin));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tbl_bar$$", swInnerJoin));
 
                 Assert.AreEqual(sExpected, sqls.ToString());
             }
@@ -552,7 +507,7 @@ namespace TCore
             public void SubclauseUnitTest_Aliases()
             {
                 string sExpected =
-                    "SELECT A1O.foo FROM alias1 A1O WHERE   A1O.foo=(SELECT A1I.foo FROM alias1 A1I WHERE   A1I.baz=boo ) ";
+                    "SELECT A1O.foo FROM alias1 A1O WHERE   A1O.foo=(SELECT A1I.foo FROM alias1 A1I WHERE   A1I.baz=boo)";
                 Dictionary<string, string> mpAliasesInner = new Dictionary<string, string>
                 {
                     {"alias1", "A1I"},
@@ -654,6 +609,26 @@ namespace TCore
             }
 
             [Test]
+            public void GroupByUnitTest()
+            {
+                SqlSelect sqls = new SqlSelect("SELECT COUNT(Foo) As CountFoo FROM Foo");
+
+                sqls.AddGroupBy("CountFoo");
+                Assert.AreEqual("SELECT COUNT(Foo) As CountFoo FROM Foo GROUP BY CountFoo", sqls.ToString());
+            }
+
+            [Test]
+            public void GroupByUnitTestWithWhereClause()
+            {
+                SqlSelect sqls = new SqlSelect("SELECT COUNT(Foo) As CountFoo FROM Foo");
+
+                sqls.Where.Add("Foo = 'Bar'", Op.And);
+
+                sqls.AddGroupBy("CountFoo");
+                Assert.AreEqual("SELECT COUNT(Foo) As CountFoo FROM Foo WHERE   Foo = 'Bar' GROUP BY CountFoo", sqls.ToString());
+            }
+
+            [Test]
             /* I N N E R  J O I N  U N I T  T E S T */
             /*----------------------------------------------------------------------------
                 %%Function: InnerJoinUnitTest
@@ -671,6 +646,7 @@ namespace TCore
             ----------------------------------------------------------------------------*/
             public void InnerJoinUnitTest()
             {
+                SqlSelect sqls;
                 SqlWhere sw;
                 string sExpected;
                 string sBase;
@@ -691,27 +667,30 @@ namespace TCore
 
                 sBase =
                     "select $$tblOrder$$.idOrder, $$tblCust$$.sCustName, $$tblCity$$.sCityName, $$tblProd$$.sProdName from $$#tblOrder$$";
+
+                sqls = new SqlSelect(sBase, mpAliases);
+
                 sExpected = "select TBLO.idOrder, TBLC.sCustName, TBLCY.sCityName, TBLP.sProdName from tblOrder TBLO " +
                             "INNER JOIN tblCust TBLC ON   TBLC.idCust=TBLO.idCust " +
                             "INNER JOIN tblCity TBLCY ON   TBLCY.idCity=TBLC.idCity " +
                             "INNER JOIN tblProd TBLP ON   TBLP.idProd=TBLO.idProd";
 
-                sw = new SqlWhere();
-                sw.AddAliases(mpAliases);
+                sw = sqls.Where;
+
                 SqlWhere swIJ;
                 swIJ = new SqlWhere();
                 swIJ.Add("$$tblCust$$.idCust=$$tblOrder$$.idCust", Op.And);
-                sw.AddInnerJoin(new SqlInnerJoin("$$#tblCust$$", swIJ));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tblCust$$", swIJ));
 
                 swIJ = new SqlWhere();
                 swIJ.Add("$$tblCity$$.idCity=$$tblCust$$.idCity", Op.And);
-                sw.AddInnerJoin(new SqlInnerJoin("$$#tblCity$$", swIJ));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tblCity$$", swIJ));
 
                 swIJ = new SqlWhere();
                 swIJ.Add("$$tblProd$$.idProd=$$tblOrder$$.idProd", Op.And);
-                sw.AddInnerJoin(new SqlInnerJoin("$$#tblProd$$", swIJ));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tblProd$$", swIJ));
 
-                sTest = sw.GetWhere(sBase);
+                sTest = sqls.ToString();
                 Assert.AreEqual(sExpected, sTest);
 
                 // second test, matching all the orders that relate to Mayor "dudley"...
@@ -731,7 +710,7 @@ namespace TCore
 
                 sw.Add("$$tblCity$$.sMayor=='dudley'", Op.And);
 
-                sTest = sw.GetWhere(sBase);
+                sTest = sqls.ToString();
                 Assert.AreEqual(sExpected, sTest);
             }
 
