@@ -4,6 +4,18 @@ Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading re
 There are several things currently implemented poorly. 
 * SqlWhere.AddInnerJoin - This should be on SqlSelect instead
 * SqlWhere.AddGroupBy - This should be on SqlSelect instead
+## Sample Usage
+```
+	Dictionary<string, string> mpAliases = new Dictionary<string, string>
+	{
+		{ ("tbl_foo", "FOO") },
+		{ ("tbl_bar", "BAR") }
+	}
+
+	SqlSelect sqls = new 
+```
+
+
 
 ## SqlWhere
 `TCore.SqlWhere` provides basic query building services.
@@ -118,6 +130,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU0MTE3MDI0LC0xNzQ2MzgyNTkyLC01Mj
-A1MjUyNzQsOTYwNzI2NjY0LC0xNDgyMDI2NTg1XX0=
+eyJoaXN0b3J5IjpbLTE2NjkxNjI4MDUsLTE3NDYzODI1OTIsLT
+UyMDUyNTI3NCw5NjA3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
 -->
