@@ -28,8 +28,14 @@ There are situations when you want to represent an entire T-SQL SELECT statement
 ```
 	TCore.SqlSelect(string sBaseQuery, Dictionary <string, string> mpAliases);
 ```
-Create the object by providing the base query and the (optional) 
+Create the object by providing the base query and the (optional) mapping of aliases.
+#### AddOrderBy
+```
+	SqlSelect.AddOrderBy(string sOrderBy)
 
+	sqlSelect.AddOrderBy(
+```
+Adds the given order by (syntax determined by T-SQL) string. Aliases are supported.
 
 ### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
@@ -68,6 +74,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTQxNTM3MjksLTUyMDUyNTI3NCw5NjA3Mj
-Y2NjQsLTE0ODIwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbMzg2NjgxNDMzLC01MjA1MjUyNzQsOTYwNz
+I2NjY0LC0xNDgyMDI2NTg1XX0=
 -->
