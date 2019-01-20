@@ -16,7 +16,9 @@ There are several things currently implemented poorly.
 	
 	SqlSelect sqls = new SqlSelect(sBaseQuery, mpAliases);
 
-	sqls.Where.Add("$$tbl_foo$$.Match1 = 'Match1'", Op.And);
+	if (fMatchByMatch1)
+		sqls.Where.Add("$$tbl_foo$$.Match1 = 'Match1'", Op.And);
+		
 	if (fMatchByMatch2)
 	{
 		sqls.Where.StartGroup(Op.Or);
@@ -28,6 +30,7 @@ There are several things currently implemented poorly.
 	sqlCommand.CommandText = sqls.ToString();
 ```
 
+This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax.
 
 
 ## SqlWhere
@@ -143,6 +146,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTcyOTExMjg4NSwtMTc0NjM4MjU5MiwtNT
+eyJoaXN0b3J5IjpbLTU3MDkwNzgyMCwtMTc0NjM4MjU5MiwtNT
 IwNTI1Mjc0LDk2MDcyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
