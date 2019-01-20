@@ -8,9 +8,9 @@ There are several things currently implemented poorly.
 ```
 	Dictionary<string, string> mpAliases = new Dictionary<string, string>
 	{
-		{ ("tbl_foo", "FOO") },
-		{ ("tbl_bar", "BAR") }
-	}
+		{ "tbl_foo", "FOO" },
+		{ "tbl_bar", "BAR" }
+	};
 
 	string sBaseQuery = "SELECT $$tbl_foo$$.FooValue, $$tbl_bar$$.BarValue FROM $$#tbl_foo$$";
 	
@@ -146,6 +146,7 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU3MDkwNzgyMCwtMTc0NjM4MjU5MiwtNT
-IwNTI1Mjc0LDk2MDcyNjY2NCwtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbMTEwODgzMjM2NywtNTcwOTA3ODIwLC0xNz
+Q2MzgyNTkyLC01MjA1MjUyNzQsOTYwNzI2NjY0LC0xNDgyMDI2
+NTg1XX0=
 -->
