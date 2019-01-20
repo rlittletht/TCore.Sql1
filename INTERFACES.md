@@ -23,10 +23,13 @@ Adds the given condition to the clause. The condition is expected to be properly
 ```
 Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
 ### SqlSelect
-There are rare situations when you want to represent an entire T-SQL SELECT statement with an object. Typically this is because you want to use this as a clause in another select statement. This is supported.
+There are situations when you want to represent an entire T-SQL SELECT statement with an object. Typically this is because you want to use this as a clause in another select statement, or this could be used to represent the entire SELECT statement you are building.
 #### SqlSelect
 ```
-	TCore.SqlSelect
+	TCore.SqlSelect(string sBaseQuery, Dictionary <string, string> mpAliases);
+```
+Create the object by providing the base query and the (optional) 
+
 
 ### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
@@ -65,6 +68,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExOTg1ODM4NDIsLTUyMDUyNTI3NCw5Nj
-A3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbOTQxNTM3MjksLTUyMDUyNTI3NCw5NjA3Mj
+Y2NjQsLTE0ODIwMjY1ODVdfQ==
 -->
