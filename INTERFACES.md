@@ -1,5 +1,10 @@
 # TCore.Sql Interfaces
 Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading records from a result set as well as building queries. (And scoping transactions and connections).
+## TBD / FUTURE
+There are several things currently implemented poorly. 
+* SqlWhere.AddInnerJoin - This should be on SqlSelect instead
+* SqlWhere.AddGroupBy - This should be on SqlSelect instead
+
 ## SqlWhere
 `TCore.SqlWhere` provides basic query building services.
 
@@ -113,6 +118,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTYwMDg1MjMwMiwtMTc0NjM4MjU5MiwtNT
-IwNTI1Mjc0LDk2MDcyNjY2NCwtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbLTU0MTE3MDI0LC0xNzQ2MzgyNTkyLC01Mj
+A1MjUyNzQsOTYwNzI2NjY0LC0xNDgyMDI2NTg1XX0=
 -->
