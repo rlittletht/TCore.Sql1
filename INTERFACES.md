@@ -12,7 +12,12 @@ There are several things currently implemented poorly.
 		{ ("tbl_bar", "BAR") }
 	}
 
-	SqlSelect sqls = new 
+	string sBaseQuery = "SELECT $$tbl_foo$$.FooValue, $$tbl_bar$$.BarValue FROM $$#tbl_foo$$";
+	
+	SqlSelect sqls = new SqlSelect(sBaseQuery, mpAliases);
+
+	sqls.Where.Add("$$tbl_foo$$.Match1 = 'Match1'", Op.And);
+	sq
 ```
 
 
@@ -130,6 +135,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2NjkxNjI4MDUsLTE3NDYzODI1OTIsLT
+eyJoaXN0b3J5IjpbLTE1NzI3MzEwOTQsLTE3NDYzODI1OTIsLT
 UyMDUyNTI3NCw5NjA3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
 -->
