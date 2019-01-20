@@ -32,6 +32,10 @@ Valid enum values for `Op` are `And, AndNot, Or, OrNot`. **NOTE**: the first add
 	sw.EndGroup()
 ```
 Allows grouping of criteria to allow proper order of operation evaluation.
+#### AddSubclause
+```
+
+```
 ### SqlSelect
 There are situations when you want to represent an entire T-SQL SELECT statement with an object. Typically this is because you want to use this as a clause in another select statement, or this could be used to represent the entire SELECT statement you are building.
 #### SqlSelect
@@ -51,7 +55,9 @@ Create the object by providing the base query and the (optional) mapping of alia
 
 	sqlSelect.AddOrderBy("$$tbl_foo$$.GroupKey");
 ```
-Adds the given Group By (syntax determined by T-SQL) string. **NOTE: This is impro
+Adds the given Group By (syntax determined by T-SQL) string.
+
+**NYI_NOTE: This is improperly implemented today on the SqlWhere object -- this has to be moved to here**
 #### Where
 ```
 	// SqlSelect.Where
@@ -104,6 +110,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5NDQxMTQ4MjIsLTUyMDUyNTI3NCw5Nj
+eyJoaXN0b3J5IjpbLTE5MzA1NzA1OTgsLTUyMDUyNTI3NCw5Nj
 A3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
 -->
