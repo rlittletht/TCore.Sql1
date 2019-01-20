@@ -10,7 +10,6 @@ You construct the where clause piece by piece. By default, the clause is empty.
 ```
 	SqlWhere.GetWhere(string sBase)
 ```
-
 Given a base string (e.g. `"SELECT * FROM Table"`),  will return the entire, properly formatted clause.
 If there are no conditions, then the WHERE clause will be completely omitted. NOTE: If there are any aliases in the base string (e.g. `"$$table_foo$$"`), they will be expanded to the proper alias.
 #### SqlWhere.Add
@@ -22,6 +21,11 @@ Adds the given condition to the clause. The condition is expected to be properly
 	sw.Add("$$tbl_foo$$.Value1 = 'match'", Op.And);
 ```
 Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
+#### StartGroup / EndGroup
+```
+	// SqlWhere.StartGroup(Op op)
+	// SqlWhere.EndGroup
+```
 ### SqlSelect
 There are situations when you want to represent an entire T-SQL SELECT statement with an object. Typically this is because you want to use this as a clause in another select statement, or this could be used to represent the entire SELECT statement you are building.
 #### SqlSelect
@@ -49,7 +53,8 @@ The Where property returns the Where clause for the SqlSelect. This allows you t
 
 	sql.CommandText = sqlSelect.ToString();
 ```
-This returns the entire SQL select clause (including 
+This returns the entire SQL select clause.
+
 ### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
 ```
@@ -87,6 +92,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MTY0NzEzODEsLTUyMDUyNTI3NCw5Nj
-A3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbMTk2ODIzMzg2OCwtNTIwNTI1Mjc0LDk2MD
+cyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
