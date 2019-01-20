@@ -1,5 +1,8 @@
 # TCore.Sql Interfaces
 Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading records from a result set as well as building queries. (And scoping transactions and connections).
+## Breaking Changes
+Breaking changes from 1.0.0.0 to 1.1.0.0:
+* A
 ## TBD / FUTURE
 There are several things currently implemented poorly. 
 * SqlWhere.AddInnerJoin - This should be on SqlSelect instead
@@ -30,12 +33,13 @@ There are several things currently implemented poorly.
 	SqlWhere swInnerJoin = new SqlWhere();
 	swInnerJoin.AddAliases(mpAliases);
 	swInnerJoin.Add("$$tbl_foo$$.FooKey = $$tbl_bar$$.BarKey", Op.And);
-	sqls.Where.AddInnerJoin("$$#tbl_bar$$", swInnerJoin);
+	sqls.AddInnerJoin("$$#tbl_bar$$", swInnerJoin);
 
 	sqlCommand.CommandText = sqls.ToString();
 ```
 
-This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax. This will also properly include the InnerJoin. **NOTE: this is not the right design for adding inner join, but its what we have right now**
+This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax. This will also properly include the InnerJoin. 
+**NOTE: Packget 1.0.0 implemented AddInnerJoin on SqlWhere**
 
 
 ## SqlWhere
@@ -151,5 +155,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTAwNzgyNjk0XX0=
+eyJoaXN0b3J5IjpbLTg4OTA1MTkzMiw5MDA3ODI2OTRdfQ==
 -->
