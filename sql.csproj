@@ -24,6 +24,7 @@
 Moved AddOrderBy from SqlWhere to SqlSelect
 Moved AddInnerJoin from SqlWhere to SqlSelect
 Changed AddOrderBy to automatically generate "ORDER BY" (callers should no longer include "ORDER BY" when they call AddOrderBy)</PackageReleaseNotes>
+    <Version>1.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
