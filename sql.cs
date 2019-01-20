@@ -642,10 +642,10 @@ namespace TCore
                 Assert.AreEqual(sExpected, sqlwOuter.GetWhere("base"));
             }
 
-            [TestCase(true, true, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO WHERE   FOO.Match1 = 'Match1' OR (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
-            [TestCase(true, false, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO WHERE   FOO.Match1 = 'Match1' ")]
-            [TestCase(false, true, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO WHERE (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
-            [TestCase(false, false, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO ")]
+            [TestCase(true, true, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE   FOO.Match1 = 'Match1' OR (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
+            [TestCase(true, false, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE   FOO.Match1 = 'Match1' ")]
+            [TestCase(false, true, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey WHERE (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
+            [TestCase(false, false, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO INNER JOIN tbl_bar BAR ON   FOO.FooKey = BAR.BarKey ")]
             [Test]
             public void TestOptionalWhereBoth(bool fFirstClause, bool fSecondClause, string sExpected)
             {
@@ -671,6 +671,11 @@ namespace TCore
                     sqls.Where.Add("$$tbl_foo$$.Match2_2 = 'M2'", Op.And);
                     sqls.Where.EndGroup();
                 }
+
+                SqlWhere swInnerJoin = new SqlWhere();
+                swInnerJoin.AddAliases(mpAliases);
+                swInnerJoin.Add("$$tbl_foo$$.FooKey = $$tbl_bar$$.BarKey", Op.And);
+                sqls.Where.AddInnerJoin(new SqlInnerJoin("$$#tbl_bar$$", swInnerJoin));
 
                 Assert.AreEqual(sExpected, sqls.ToString());
             }
