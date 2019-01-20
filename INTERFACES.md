@@ -25,6 +25,10 @@ If there are no conditions, then the WHERE clause will be completely omitted. NO
 	
 	SqlWhere.Add(string s, Op op)
 ```
+Adds the given condition to the clause. The condition is expected to be properly formed, and can contain aliases:
+```
+	sw.Add("$$tbl_foo$$.Value1 = 'match', Op.And);
+```
 
 
 ### Aliases
@@ -64,6 +68,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5Mjg1NjEyMTEsOTYwNzI2NjY0LC0xND
-gyMDI2NTg1XX0=
+eyJoaXN0b3J5IjpbMjkwODA3ODAyLDk2MDcyNjY2NCwtMTQ4Mj
+AyNjU4NV19
 -->
