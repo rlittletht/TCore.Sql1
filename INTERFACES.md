@@ -20,7 +20,7 @@ Adds the given condition to the clause. The condition is expected to be properly
 ```
 	sw.Add("$$tbl_foo$$.Value1 = 'match'", Op.And);
 ```
-Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
+Valid enum values for `Op` are `And, AndNot, Or, OrNot`. **NOTE**: the first added clause is assumed to be required and should be `Op.And`.
 #### StartGroup / EndGroup
 ```
 	// SqlWhere.StartGroup(Op op)
@@ -31,7 +31,7 @@ Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
 	sw.Add("$$tbl_foo$$.Value2 = 'match2'", Op.And);
 	sw.EndGroup()
 ```
-Allows grouping of criteria to allow proper 
+Allows grouping of criteria to allow proper order of operation evaluation.
 ### SqlSelect
 There are situations when you want to represent an entire T-SQL SELECT statement with an object. Typically this is because you want to use this as a clause in another select statement, or this could be used to represent the entire SELECT statement you are building.
 #### SqlSelect
@@ -98,6 +98,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyODA5NjkwMCwtNTIwNTI1Mjc0LDk2MD
+eyJoaXN0b3J5IjpbLTczMzEzMDI4MCwtNTIwNTI1Mjc0LDk2MD
 cyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
