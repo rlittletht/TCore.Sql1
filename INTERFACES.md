@@ -17,12 +17,15 @@ There are several things currently implemented poorly.
 	SqlSelect sqls = new SqlSelect(sBaseQuery, mpAliases);
 
 	sqls.Where.Add("$$tbl_foo$$.Match1 = 'Match1'", Op.And);
-	sqls.Where.StartGroup(Op.Or);
-	sqls.Where.Add("$$tbl_foo$$.Match2_1 = 'M1'", Op.And);
-	sqls.Where.Add("$$tbl_foo$$.Match2_2 = 'M2'", Op.And);
-	sqls.Where.EndGroup();
+	if (fMatchByMatch2)
+	{
+		sqls.Where.StartGroup(Op.Or);
+		sqls.Where.Add("$$tbl_foo$$.Match2_1 = 'M1'", Op.And);
+		sqls.Where.Add("$$tbl_foo$$.Match2_2 = 'M2'", Op.And);
+		sqls.Where.EndGroup();
+	}
 	
-	sql
+	sqlCommand.CommandText = sqls.ToString();
 ```
 
 
@@ -140,6 +143,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExMjAyNzI2NDMsLTE3NDYzODI1OTIsLT
-UyMDUyNTI3NCw5NjA3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
+eyJoaXN0b3J5IjpbLTcyOTExMjg4NSwtMTc0NjM4MjU5MiwtNT
+IwNTI1Mjc0LDk2MDcyNjY2NCwtMTQ4MjAyNjU4NV19
 -->
