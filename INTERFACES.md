@@ -45,7 +45,13 @@ Create the object by providing the base query and the (optional) mapping of alia
 
 	sqlSelect.AddOrderBy("$$tbl_foo$$.OrderKey ASC");
 ```
-Adds the given order by (syntax determined by T-SQL) string. Aliases are supported.
+#### AddGroupBy
+```
+	// SqlSelect.AddGroupBy(string sGroupBy)
+
+	sqlSelect.AddOrderBy("$$tbl_foo$$.GroupKey");
+```
+Adds the given Group By (syntax determined by T-SQL) string. **NOTE: This is impro
 #### Where
 ```
 	// SqlSelect.Where
@@ -98,6 +104,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTczMzEzMDI4MCwtNTIwNTI1Mjc0LDk2MD
-cyNjY2NCwtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbLTE5NDQxMTQ4MjIsLTUyMDUyNTI3NCw5Nj
+A3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
 -->
