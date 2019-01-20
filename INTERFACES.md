@@ -12,11 +12,13 @@ SELECT Foo.Data1, Foo.Data2, Bar.Data3
 ```
 Consider the above query, but you dynamically want to construct the selection criteria. Your constant query might look like
 ```
-static string s_s
+static string s_sSelectBase = "SELECT Foo.Data1, Foo.Data2, Bar.Data3 FROM TableFoo AS Foo INNER JOIN TableBar Bar ON Foo.FooKey = Bar.BarKey";
+```
+but later in code, when you go to append the query string, you have to manage all those aliases. Even worse, what if you have shared code that wants to generate the condition. You have to enforce the same aliases throughout your 
 
 
 If you are interactively building a query and just need to create an alias on-the-fly, use `SqlWhere::AddAlias(string sTable)`, which will create an alias unique to 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODk3NTcyMzU2LC0xNDgyMDI2NTg1XX0=
+eyJoaXN0b3J5IjpbMjA2MDczMjE1MywtMTQ4MjAyNjU4NV19
 -->
