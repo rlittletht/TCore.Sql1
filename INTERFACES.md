@@ -151,7 +151,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTAwNzgyNjk0LC0xMDQ0MTUxNDEzLDExMD
-g4MzIzNjcsLTU3MDkwNzgyMCwtMTc0NjM4MjU5MiwtNTIwNTI1
-Mjc0LDk2MDcyNjY2NCwtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbOTAwNzgyNjk0XX0=
 -->
