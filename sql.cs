@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using TCore.Exceptions;
-using TCore.Logging;
+//using TCore.Logging;
 
 namespace TCore
 {
@@ -37,7 +37,9 @@ namespace TCore
 
         public Sql Sql => m_sql;
         public Guid Crids => m_crids;
+#if LoggingIntegrated
         public CorrelationID Crid => CorrelationID.FromCrids(m_crids);
+#endif
 
         public static implicit operator Sql(LocalSqlHolder lsh)
         {

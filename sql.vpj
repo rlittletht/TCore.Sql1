@@ -6,10 +6,10 @@
     WorkingDir="."
     AssociatedFile="sql.csproj"
     AssociatedFileType="microsoft visual studio csharp">
+    <Files AutoFolders="DirectoryView"/>
     <Config
         Name="Debug|AnyCPU"
-        OutputFile=""
-        CompilerConfigName="">
+        ObjectDir="bin\Debug\">
         <Includes>
             <Include Dir="%(INCLUDE)"/>
         </Includes>
@@ -36,7 +36,7 @@
                 SaveOption="SaveNone"
                 EnableBuildFirst="0"
                 RunFromDir="%rw">
-                <Exec CmdLine='mdbg "%o"'/>
+                <Exec CmdLine='devenv "%w"'/>
             </Target>
             <Target
                 Name="Execute"
@@ -66,8 +66,7 @@
     </Config>
     <Config
         Name="Release|AnyCPU"
-        OutputFile=""
-        CompilerConfigName="">
+        ObjectDir="bin\Release\">
         <Includes>
             <Include Dir="%(INCLUDE)"/>
         </Includes>
@@ -94,7 +93,7 @@
                 SaveOption="SaveNone"
                 EnableBuildFirst="0"
                 RunFromDir="%rw">
-                <Exec CmdLine='mdbg "%o"'/>
+                <Exec CmdLine='devenv "%w"'/>
             </Target>
             <Target
                 Name="Execute"
@@ -122,5 +121,4 @@
             </Target>
         </Menu>
     </Config>
-    <Files AutoFolders="DirectoryView"/>
 </Project>
