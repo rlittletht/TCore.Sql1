@@ -2,7 +2,9 @@
 Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading records from a result set as well as building queries. (And scoping transactions and connections).
 ## Breaking Changes
 Breaking changes from 1.0.0.0 to 1.1.0.0:
-* A
+* `SqlWhere.AddOrderBy()` moved to `SqlSelect.AddOrderBy()`
+* `SqlWhere.AddInnerJoin()` moved to `SqlSelect.AddInnerJoin()`
+* `SqlWhere.AddOrderBy()` now automatically generates "ORDER BY" T-SQL command text. Callers must no longer specify literal text "ORDER BY" when they call `AddOrderBy`
 ## TBD / FUTURE
 There are several things currently implemented poorly. 
 * SqlWhere.AddInnerJoin - This should be on SqlSelect instead
@@ -155,5 +157,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTg4OTA1MTkzMiw5MDA3ODI2OTRdfQ==
+eyJoaXN0b3J5IjpbLTE1OTQyMTcyNTNdfQ==
 -->
