@@ -12,7 +12,6 @@ namespace TCore
     public class SqlWhere
     {
         Dictionary<string, string> m_mpAliases = new Dictionary<string, string>();
-        List<SqlInnerJoin> m_plij = new List<SqlInnerJoin>();
         List<Clause> m_plc;
         string m_sGroupBy;
 
@@ -196,19 +195,6 @@ namespace TCore
             return s;
         }
 
-        /* A D D  I N N E R  J O I N */
-        /*----------------------------------------------------------------------------
-			%%Function: AddInnerJoin
-			%%Qualified: BhSvc.SqlWhere.AddInnerJoin
-			%%Contact: rlittle
-
-			add an inner join			
-		----------------------------------------------------------------------------*/
-        public void AddInnerJoin(SqlInnerJoin ij)
-        {
-            m_plij.Add(ij);
-        }
-
         /* A D D  G R O U P  B Y */
         /*----------------------------------------------------------------------------
 			%%Function: AddGroupBy
@@ -277,15 +263,6 @@ namespace TCore
             StringBuilder sb = new StringBuilder(256);
 
             sb.Append(ExpandAliases(sBase));
-
-            if (m_plij != null)
-            {
-                foreach (SqlInnerJoin ij in m_plij)
-                {
-                    sb.Append(" ");
-                    sb.Append(ExpandAliases(ij.ToString()));
-                }
-            }
 
             if (m_plc.Count == 0)
                 return sb.ToString();
@@ -543,7 +520,7 @@ namespace TCore
                 SqlWhere swInnerJoin = new SqlWhere();
                 swInnerJoin.AddAliases(mpAliases);
                 swInnerJoin.Add("$$tbl_foo$$.FooKey = $$tbl_bar$$.BarKey", Op.And);
-                sqls.Where.AddInnerJoin(new SqlInnerJoin("$$#tbl_bar$$", swInnerJoin));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tbl_bar$$", swInnerJoin));
 
                 Assert.AreEqual(sExpected, sqls.ToString());
             }
@@ -671,6 +648,7 @@ namespace TCore
             ----------------------------------------------------------------------------*/
             public void InnerJoinUnitTest()
             {
+                SqlSelect sqls;
                 SqlWhere sw;
                 string sExpected;
                 string sBase;
@@ -691,27 +669,30 @@ namespace TCore
 
                 sBase =
                     "select $$tblOrder$$.idOrder, $$tblCust$$.sCustName, $$tblCity$$.sCityName, $$tblProd$$.sProdName from $$#tblOrder$$";
+
+                sqls = new SqlSelect(sBase, mpAliases);
+
                 sExpected = "select TBLO.idOrder, TBLC.sCustName, TBLCY.sCityName, TBLP.sProdName from tblOrder TBLO " +
                             "INNER JOIN tblCust TBLC ON   TBLC.idCust=TBLO.idCust " +
                             "INNER JOIN tblCity TBLCY ON   TBLCY.idCity=TBLC.idCity " +
-                            "INNER JOIN tblProd TBLP ON   TBLP.idProd=TBLO.idProd";
+                            "INNER JOIN tblProd TBLP ON   TBLP.idProd=TBLO.idProd ";
 
-                sw = new SqlWhere();
-                sw.AddAliases(mpAliases);
+                sw = sqls.Where;
+
                 SqlWhere swIJ;
                 swIJ = new SqlWhere();
                 swIJ.Add("$$tblCust$$.idCust=$$tblOrder$$.idCust", Op.And);
-                sw.AddInnerJoin(new SqlInnerJoin("$$#tblCust$$", swIJ));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tblCust$$", swIJ));
 
                 swIJ = new SqlWhere();
                 swIJ.Add("$$tblCity$$.idCity=$$tblCust$$.idCity", Op.And);
-                sw.AddInnerJoin(new SqlInnerJoin("$$#tblCity$$", swIJ));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tblCity$$", swIJ));
 
                 swIJ = new SqlWhere();
                 swIJ.Add("$$tblProd$$.idProd=$$tblOrder$$.idProd", Op.And);
-                sw.AddInnerJoin(new SqlInnerJoin("$$#tblProd$$", swIJ));
+                sqls.AddInnerJoin(new SqlInnerJoin("$$#tblProd$$", swIJ));
 
-                sTest = sw.GetWhere(sBase);
+                sTest = sqls.ToString();
                 Assert.AreEqual(sExpected, sTest);
 
                 // second test, matching all the orders that relate to Mayor "dudley"...
@@ -727,11 +708,11 @@ namespace TCore
                             "INNER JOIN tblCust TBLC ON   TBLC.idCust=TBLO.idCust " +
                             "INNER JOIN tblCity TBLCY ON   TBLCY.idCity=TBLC.idCity " +
                             "INNER JOIN tblProd TBLP ON   TBLP.idProd=TBLO.idProd " +
-                            "WHERE   TBLCY.sMayor=='dudley'";
+                            "WHERE   TBLCY.sMayor=='dudley' ";
 
                 sw.Add("$$tblCity$$.sMayor=='dudley'", Op.And);
 
-                sTest = sw.GetWhere(sBase);
+                sTest = sqls.ToString();
                 Assert.AreEqual(sExpected, sTest);
             }
 
