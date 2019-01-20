@@ -642,6 +642,39 @@ namespace TCore
                 Assert.AreEqual(sExpected, sqlwOuter.GetWhere("base"));
             }
 
+            [TestCase(true, true, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO WHERE   FOO.Match1 = 'Match1' OR (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
+            [TestCase(true, false, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO WHERE   FOO.Match1 = 'Match1' ")]
+            [TestCase(false, true, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO WHERE (  FOO.Match2_1 = 'M1' AND FOO.Match2_2 = 'M2')  ")]
+            [TestCase(false, false, "SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO ")]
+            [Test]
+            public void TestOptionalWhereBoth(bool fFirstClause, bool fSecondClause, string sExpected)
+            {
+                Dictionary<string, string> mpAliases = new Dictionary<string, string>
+                {
+                    {"tbl_foo", "FOO"},
+                    {"tbl_bar", "BAR"}
+                };
+
+
+                string sBaseQuery = "SELECT $$tbl_foo$$.FooValue, $$tbl_bar$$.BarValue FROM $$#tbl_foo$$";
+
+                SqlSelect sqls = new SqlSelect(sBaseQuery, mpAliases);
+                Assert.AreEqual("SELECT FOO.FooValue, BAR.BarValue FROM tbl_foo FOO ", sqls.ToString());
+
+                if (fFirstClause)
+                    sqls.Where.Add("$$tbl_foo$$.Match1 = 'Match1'", Op.And);
+
+                if (fSecondClause)
+                {
+                    sqls.Where.StartGroup(Op.Or);
+                    sqls.Where.Add("$$tbl_foo$$.Match2_1 = 'M1'", Op.And);
+                    sqls.Where.Add("$$tbl_foo$$.Match2_2 = 'M2'", Op.And);
+                    sqls.Where.EndGroup();
+                }
+
+                Assert.AreEqual(sExpected, sqls.ToString());
+            }
+
             [Test]
             public void SubclauseUnitTest_Aliases()
             {
