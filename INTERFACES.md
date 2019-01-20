@@ -19,7 +19,7 @@ If there are no conditions, then the WHERE clause will be completely omitted. NO
 ```
 Adds the given condition to the clause. The condition is expected to be properly formed, and can contain aliases:
 ```
-	sw.Add("$$tbl_foo$$.Value1 = 'match', Op.And);
+	sw.Add("$$tbl_foo$$.Value1 = 'match'", Op.And);
 ```
 Valid enum values for `Op` are `And, AndNot, Or, OrNot`.
 ### SqlSelect
@@ -40,8 +40,16 @@ Adds the given order by (syntax determined by T-SQL) string. Aliases are support
 ```
 	// SqlSelect.Where
 
-	sqlSelect.Where.Add("$$tbl_foo$$.Value1 = 'match'"
+	sqlSelect.Where.Add("$$tbl_foo$$.Value1 = 'match'", Op.And);
 ```
+The Where property returns the Where clause for the SqlSelect. This allows you to build up the query clause.
+#### ToString
+```
+	/// SqlSelect.ToString()
+
+	sql.CommandText = sqlSelect.ToString();
+```
+This returns the entire SQL select clause (including 
 ### Aliases
 Building queries can quickly become tedious when you have subqueries and aliases. `SqlWhere` provides alias support that allows you to define aliases via a mapping.
 ```
@@ -79,6 +87,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTUwMDAxNDE5MSwtNTIwNTI1Mjc0LDk2MD
-cyNjY2NCwtMTQ4MjAyNjU4NV19
+eyJoaXN0b3J5IjpbLTE0MTY0NzEzODEsLTUyMDUyNTI3NCw5Nj
+A3MjY2NjQsLTE0ODIwMjY1ODVdfQ==
 -->
