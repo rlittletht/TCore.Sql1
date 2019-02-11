@@ -41,7 +41,7 @@ Breaking changes from 1.0.0.0 to 1.1.0.0:
 This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax. This will also properly include the InnerJoin. 
 **NOTE: Package 1.1.0.0 implemented AddInnerJoin on SqlSelect**
 ## SqlSelect
-
+`Tcore.SqlSelect` provides a full SQL select statement, bringing together `SqlWhere`, `InnerJoin`, 
 
 ## SqlWhere
 `TCore.SqlWhere` provides basic query building services.
@@ -156,6 +156,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyMTM2MzM5NTQsLTE1OTQyMTcyNTNdfQ
-==
+eyJoaXN0b3J5IjpbMTYxOTA4MTk3LC0xNTk0MjE3MjUzXX0=
 -->
