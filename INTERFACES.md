@@ -2,7 +2,7 @@
 Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading records from a result set as well as building queries. (And scoping transactions and connections).
 ## Breaking Changes
 Breaking changes from 1.1.0.0 to 1.2.0.0:
-_None_
+* _None_
 
 Breaking changes from 1.0.0.0 to 1.1.0.0:
 * `SqlWhere.AddOrderBy()` moved to `SqlSelect.AddOrderBy()`
@@ -157,5 +157,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTgzODMxNTg5NywtMTU5NDIxNzI1M119
+eyJoaXN0b3J5IjpbMTE3MzU3NjE4OSwtMTU5NDIxNzI1M119
 -->
