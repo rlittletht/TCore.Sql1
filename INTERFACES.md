@@ -1,6 +1,8 @@
 # TCore.Sql Interfaces
 Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading records from a result set as well as building queries. (And scoping transactions and connections).
 ## Breaking Changes
+Breaking changes from 1.1.0.0 to 1.2.0.0:
+<None>
 Breaking changes from 1.0.0.0 to 1.1.0.0:
 * `SqlWhere.AddOrderBy()` moved to `SqlSelect.AddOrderBy()`
 * `SqlWhere.AddInnerJoin()` moved to `SqlSelect.AddInnerJoin()`
@@ -157,5 +159,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1OTQyMTcyNTNdfQ==
+eyJoaXN0b3J5IjpbMTY4MzI4NzA5MywtMTU5NDIxNzI1M119
 -->
