@@ -7,10 +7,6 @@ Breaking changes from 1.0.0.0 to 1.1.0.0:
 * `SqlWhere.AddOrderBy()` moved to `SqlSelect.AddOrderBy()`
 * `SqlWhere.AddInnerJoin()` moved to `SqlSelect.AddInnerJoin()`
 * `SqlWhere.AddOrderBy()` now automatically generates "ORDER BY" T-SQL command text. Callers must no longer specify literal text "ORDER BY" when they call `AddOrderBy`
-## TBD / FUTURE
-There are several things currently implemented poorly. 
-* SqlWhere.AddInnerJoin - This should be on SqlSelect instead
-* SqlWhere.AddGroupBy - This should be on SqlSelect instead
 ## Sample Usage
 ```
 	Dictionary<string, string> mpAliases = new Dictionary<string, string>
@@ -43,7 +39,8 @@ There are several things currently implemented poorly.
 ```
 
 This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax. This will also properly include the InnerJoin. 
-**NOTE: Packget 1.0.0 implemented AddInnerJoin on SqlWhere**
+**NOTE: Package 1.1.0.0 implemented AddInnerJoin on SqlSelect**
+## SqlSelect
 
 
 ## SqlWhere
@@ -159,5 +156,6 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTY4MzI4NzA5MywtMTU5NDIxNzI1M119
+eyJoaXN0b3J5IjpbLTEyMTM2MzM5NTQsLTE1OTQyMTcyNTNdfQ
+==
 -->
