@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-      <TargetFramework>net45</TargetFramework>
+      <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectGuid>{D2383C17-0D82-41B0-8C18-A14253C050C7}</ProjectGuid>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -18,13 +18,17 @@
     <RepositoryUrl>https://github.com/rlittletht/TCore.Sql</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/rlittletht/TCore.Sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <PackageReleaseNotes>BREAKING CHANGES:
-Moved AddOrderBy from SqlWhere to SqlSelect
-Moved AddInnerJoin from SqlWhere to SqlSelect
-Changed AddOrderBy to automatically generate "ORDER BY" (callers should no longer include "ORDER BY" when they call AddOrderBy)</PackageReleaseNotes>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <PackageReleaseNotes>NO BREAKING CHANGES:
+Added SqlException, SqlQueryReadLine class.
+Changed to .net461
+
+</PackageReleaseNotes>
+    <Version>1.2.0</Version>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,21 +47,12 @@ Changed AddOrderBy to automatically generate "ORDER BY" (callers should no longe
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Rwp\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="StatusResult, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\TCore.StatusResult.1.0.0\lib\net45\StatusResult.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
+    <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="TCore.Exceptions" Version="1.0.0" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PackageReference Include="NUnit" Version="3.11.0" />
-  </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="NUnit" Version="3.12.0" />
+      <PackageReference Include="TCore.Exceptions" Version="1.1.0" />
+      <PackageReference Include="TCore.StatusResult" Version="2.0.0" />
+    </ItemGroup>
 </Project>

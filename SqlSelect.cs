@@ -10,7 +10,8 @@ namespace TCore
         private string m_sBase;
         private SqlWhere m_sw;
         private string m_sOrderBy;
-        string m_sGroupBy;
+        private string m_sGroupBy;
+        private string m_sAs;
 
         public override string ToString()
         {
@@ -21,8 +22,11 @@ namespace TCore
 
             StringBuilder sb = new StringBuilder(256);
 
-            sb.Append(m_sw.ExpandAliases(sBase));
+            // if there is an AS suffix, then entire select must be in a parens
+            if (m_sAs != null)
+                sb.Append("(");
 
+            sb.Append(m_sw.ExpandAliases(sBase));
             if (m_plij != null)
             {
                 foreach (SqlInnerJoin ij in m_plij)
@@ -37,16 +41,22 @@ namespace TCore
             sb = new StringBuilder(256);
 
             sb.Append(m_sw.GetWhere(sBaseForWhere));
+            if (m_sGroupBy != null)
+            {
+                sb.Append(" GROUP BY ");
+                sb.Append(m_sw.ExpandAliases(m_sGroupBy));
+            }
+
             if (m_sOrderBy != null)
             {
                 sb.Append(" ORDER BY ");
                 sb.Append(m_sw.ExpandAliases(m_sOrderBy));
             }
 
-            if (m_sGroupBy != null)
+            if (m_sAs != null)
             {
-                sb.Append(" GROUP BY ");
-                sb.Append(m_sw.ExpandAliases(m_sGroupBy));
+                sb.Append(") AS ");
+                sb.Append(m_sAs);
             }
 
             return sb.ToString();
@@ -75,6 +85,10 @@ namespace TCore
             m_sBase = sBase;
         }
 
+        public void AddAs(string sAs)
+        {
+            m_sAs = sAs;
+        }
         public void AddAliases(Dictionary<string, string> mpAliases)
         {
             m_sw.AddAliases(mpAliases);
