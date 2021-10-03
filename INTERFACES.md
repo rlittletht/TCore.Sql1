@@ -1,14 +1,13 @@
 # TCore.Sql Interfaces
 Provides a layer on top of `Sytem.Data.SqlClient` to ease things like reading records from a result set as well as building queries. (And scoping transactions and connections).
 ## Breaking Changes
+Breaking changes from 1.1.0.0 to 1.2.0.0:
+* _None_
+
 Breaking changes from 1.0.0.0 to 1.1.0.0:
 * `SqlWhere.AddOrderBy()` moved to `SqlSelect.AddOrderBy()`
 * `SqlWhere.AddInnerJoin()` moved to `SqlSelect.AddInnerJoin()`
 * `SqlWhere.AddOrderBy()` now automatically generates "ORDER BY" T-SQL command text. Callers must no longer specify literal text "ORDER BY" when they call `AddOrderBy`
-## TBD / FUTURE
-There are several things currently implemented poorly. 
-* SqlWhere.AddInnerJoin - This should be on SqlSelect instead
-* SqlWhere.AddGroupBy - This should be on SqlSelect instead
 ## Sample Usage
 ```
 	Dictionary<string, string> mpAliases = new Dictionary<string, string>
@@ -41,8 +40,9 @@ There are several things currently implemented poorly.
 ```
 
 This will correctly deal with the existence of either of the clauses, with proper AND/OR usage, creating a correct syntax. This will also properly include the InnerJoin. 
-**NOTE: Packget 1.0.0 implemented AddInnerJoin on SqlWhere**
-
+**NOTE: Package 1.1.0.0 implemented AddInnerJoin on SqlSelect**
+## SqlSelect
+`Tcore.SqlSelect` provides a full SQL select statement, bringing together `SqlWhere`, `InnerJoin`, and decorations like `ORDER BY`, `GROUP BY`, `AS`, etc.
 
 ## SqlWhere
 `TCore.SqlWhere` provides basic query building services.
@@ -157,5 +157,5 @@ More likely, you will want to define a bunch of aliases upfront in the code and 
 ```
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1OTQyMTcyNTNdfQ==
+eyJoaXN0b3J5IjpbMTE3MzU3NjE4OSwtMTU5NDIxNzI1M119
 -->
