@@ -18,11 +18,11 @@
     <RepositoryUrl>https://github.com/rlittletht/TCore.Core.Sql</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/rlittletht/TCore.Core.Sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.0</FileVersion>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
