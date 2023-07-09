@@ -26,7 +26,7 @@ namespace TCore
         public bool FAddResultRow(SqlReader sqlr, int iRecordSet)
         {
             if (m_cRowsRead++ != 0)
-                throw new SqlExceptionNotSingleRow();
+                throw new TcSqlExceptionNotSingleRow();
 
             m_read(sqlr, ref m_tResult);
             return true;
@@ -37,7 +37,7 @@ namespace TCore
             get
             {
                 if (m_cRowsRead != 1)
-                    throw new SqlExceptionNoResults();
+                    throw new TcSqlExceptionNoResults();
 
                 return m_tResult; 
             }

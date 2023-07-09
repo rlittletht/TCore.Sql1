@@ -11,8 +11,7 @@ namespace TCore
         SqlDataReader m_sqlr;
         bool m_fAttached;
         private Guid m_crids;
-
-        SR m_sr;
+        private bool m_fSucceeded = false;
 
         public SqlReader()
         {
@@ -38,12 +37,9 @@ namespace TCore
             m_crids = crids;
         }
 
-        /* A T T A C H */
         /*----------------------------------------------------------------------------
             %%Function: Attach
-            %%Qualified: tw.twsvc:SqlReader.Attach
-            %%Contact: rlittle
-    
+            %%Qualified: TCore.SqlReader.Attach
         ----------------------------------------------------------------------------*/
         public void Attach(Sql sql)
         {
@@ -52,44 +48,25 @@ namespace TCore
                 m_fAttached = true;
         }
 
-        /* F  E X E C U T E  Q U E R Y */
         /*----------------------------------------------------------------------------
-            %%Function: FExecuteQuery
-            %%Qualified: TCore.SqlReader.FExecuteQuery
-            %%Contact: rlittle
-    
+            %%Function: ExecuteQuery
+            %%Qualified: TCore.SqlReader.ExecuteQuery
         ----------------------------------------------------------------------------*/
-        public bool FExecuteQuery(string sQuery, string sResourceConnString)
-        {
-            SR sr = ExecuteQuery(sQuery, sResourceConnString);
-
-            return sr.Succeeded;
-        }
-
-        /* F  E X E C U T E  Q U E R Y */
-        /*----------------------------------------------------------------------------
-            %%Function: FExecuteQuery
-            %%Qualified: BhSvc.SqlReader.FExecuteQuery
-            %%Contact: rlittle
-    
-        ----------------------------------------------------------------------------*/
-        public SR ExecuteQuery(string sQuery, string sResourceConnString)
+        public void ExecuteQuery(string sQuery, string sResourceConnString)
         {
             if (m_sql == null)
             {
-                m_sr = Sql.OpenConnection(out m_sql, sResourceConnString);
-                m_sr.CorrelationID = m_crids;
+                m_sql = Sql.OpenConnection(sResourceConnString);
                 m_fAttached = false;
             }
 
-            if ((m_sr != null && !m_sr.Succeeded) || m_sql == null)
-                return m_sr;
+            if (m_sql == null)
+                throw new TcSqlException("could not open sql connection");
 
             SqlCommand sqlcmd = m_sql.Connection.CreateCommand();
             sqlcmd.CommandText = sQuery;
             sqlcmd.Transaction = m_sql.Transaction;
 
-            m_sr = null;
             if (m_sqlr != null)
                 m_sqlr.Close();
 
@@ -99,20 +76,13 @@ namespace TCore
             }
             catch (Exception exc)
             {
-                return SR.FailedCorrelate(
-                    String.Format("ExcuteReader failed on query: {0}; {1}: {2}", sQuery, exc.Message, exc.StackTrace),
-                    m_crids);
+                throw new TcSqlException(m_crids, exc, "caught exception executing reader");
             }
-
-            return SR.SuccessCorrelate(m_crids);
         }
 
-        /* C L O S E */
         /*----------------------------------------------------------------------------
             %%Function: Close
-            %%Qualified: BhSvc.SqlReader.Close
-            %%Contact: rlittle
-    
+            %%Qualified: TCore.SqlReader.Close
         ----------------------------------------------------------------------------*/
         public void Close()
         {
@@ -126,25 +96,8 @@ namespace TCore
             }
         }
 
-        public SqlDataReader Reader
-        {
-            get { return m_sqlr; }
-        }
-
-        public bool Succeeded
-        {
-            get { return m_sr == null ? true : m_sr.Succeeded; }
-        }
-
-        public string Failed
-        {
-            get { return m_sr == null ? "" : m_sr.Reason; }
-        }
-
-        public SR Result
-        {
-            get { return m_sr == null ? SR.Success() : m_sr; }
-        }
+        public SqlDataReader Reader => m_sqlr;
+        public bool Succeeded => m_fSucceeded;
     }
 
 }
