@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
 using NUnit.Framework;
 using TCore.Exceptions;
-//using TCore.Logging;
 
 namespace TCore
 {
@@ -40,173 +39,124 @@ namespace TCore
         public SqlTransaction Transaction { get { return m_sqlt; } }
 
 
-        /* O P E N  C O N N E C T I O N */
         /*----------------------------------------------------------------------------
-			%%Function: OpenConnection
-			%%Contact: rlittle
-
-		----------------------------------------------------------------------------*/
-        public static SR OpenConnection(out Sql sql, string sResourceConnString)
+            %%Function: OpenConnection
+            %%Qualified: TCore.Sql.OpenConnection
+        ----------------------------------------------------------------------------*/
+        public static Sql OpenConnection(string sResourceConnString)
         {
-            //System.Threading.Thread.Sleep(150);
-            sql = null;
             SqlConnection sqlc = new SqlConnection(sResourceConnString);
 
-            try
-            {
                 sqlc.Open();
-            }
-            catch (Exception exc)
-            {
-                return SR.Failed(exc.ToString());
-            }
 
-            sql = new Sql(sqlc, null);
-            return SR.Success();
+            return new Sql(sqlc, null);
         }
 
-        public static SR SrSetupStaticSql(ref Sql sql, string sResourceConnString, out bool fLocalSql)
+        /*----------------------------------------------------------------------------
+            %%Function: SrSetupStaticSql
+            %%Qualified: TCore.Sql.SrSetupStaticSql
+        ----------------------------------------------------------------------------*/
+        public static Sql SetupStaticSql(Sql sqlIn, string sResourceConnString, out bool fLocalSql)
         {
-            SR sr;
             fLocalSql = false;
 
-            try
+            if (sqlIn == null)
             {
-                if (sql == null)
-                {
-                    sr = Sql.OpenConnection(out sql, sResourceConnString);
-                    if (sr.Succeeded)
-                        fLocalSql = true;
-                }
-                sr = SR.Success();
-            }
-            catch (Exception exc)
-            {
-                sr = SR.Failed(exc.Message);
+                sqlIn = OpenConnection(sResourceConnString);
+                fLocalSql = true;
             }
 
-            return sr;
+            return sqlIn;
         }
 
-        public static SR SrReleaseStaticSql(SR sr, ref Sql sql, bool fLocalSql)
+        /*----------------------------------------------------------------------------
+            %%Function: SrReleaseStaticSql
+            %%Qualified: TCore.Sql.SrReleaseStaticSql
+        ----------------------------------------------------------------------------*/
+        public static void ReleaseStaticSql(ref Sql sql, bool fLocalSql)
         {
             if (fLocalSql)
                 sql.Close();
-
-            return sr;
-
         }
 
-        /* E X E C U T E  N O N  Q U E R Y */
         /*----------------------------------------------------------------------------
-			%%Function: ExecuteNonQuery
-			%%Qualified: BhSvc.Sql.ExecuteNonQuery
-			%%Contact: rlittle
+            %%Function: ExecuteNonQuery
+            %%Qualified: TCore.Sql.ExecuteNonQuery
 
 			Execute the given non query.  There is only a failed/success response
-		----------------------------------------------------------------------------*/
-        public static SR ExecuteNonQuery(
+        ----------------------------------------------------------------------------*/
+        public static void ExecuteNonQuery(
             Sql sql,
             string s,
             string sResourceConnString,
             CustomizeCommandDel customizeParams = null)
         {
-            SR sr;
+            sql = SetupStaticSql(sql, sResourceConnString, out bool fLocalSql);
 
-            if (!(sr = SrSetupStaticSql(ref sql, sResourceConnString, out bool fLocalSql)).Succeeded)
-                return sr;
+            SqlCommand sqlcmd = sql.CreateCommand();
 
-            try
-            {
-                SqlCommand sqlcmd = sql.CreateCommand();
+            sqlcmd.CommandText = s;
+            if (customizeParams != null)
+                customizeParams(sqlcmd);
 
-                sqlcmd.CommandText = s;
-                if (customizeParams != null)
-                    customizeParams(sqlcmd);
+            sqlcmd.Transaction = sql.Transaction;
+            sqlcmd.ExecuteNonQuery();
 
-                sqlcmd.Transaction = sql.Transaction;
-                sqlcmd.ExecuteNonQuery();
 
-                sr = SR.Success();
-            }
-            catch (Exception exc)
-            {
-                sr = SR.Failed(exc.Message);
-            }
-
-            return SrReleaseStaticSql(sr, ref sql, fLocalSql);
+            ReleaseStaticSql(ref sql, fLocalSql);
         }
 
-        public SR ExecuteNonQuery(string s, CustomizeCommandDel customizeParams = null)
+        /*----------------------------------------------------------------------------
+            %%Function: ExecuteNonQuery
+            %%Qualified: TCore.Sql.ExecuteNonQuery
+        ----------------------------------------------------------------------------*/
+        public void ExecuteNonQuery(string s, CustomizeCommandDel customizeParams = null)
         {
-            SR sr;
+            SqlCommand sqlcmd = CreateCommand();
 
-            try
-            {
-                SqlCommand sqlcmd = CreateCommand();
+            sqlcmd.CommandText = s;
+            if (customizeParams != null)
+                customizeParams(sqlcmd);
 
-                sqlcmd.CommandText = s;
-                if (customizeParams != null)
-                    customizeParams(sqlcmd);
-
-                sqlcmd.Transaction = Transaction;
-                sqlcmd.ExecuteNonQuery();
-
-                sr = SR.Success();
-            }
-            catch (Exception exc)
-            {
-                sr = SR.Failed(exc.Message);
-            }
-
-            return sr;
+            sqlcmd.Transaction = Transaction;
+            sqlcmd.ExecuteNonQuery();
         }
 
+        /*----------------------------------------------------------------------------
+            %%Function: NExecuteScalar
+            %%Qualified: TCore.Sql.NExecuteScalar
+        ----------------------------------------------------------------------------*/
         public static int NExecuteScalar(Sql sql, string s, string sResourceConnString, int nDefaultValue)
         {
-            SR sr;
-            bool fLocalSql;
-            int nRet;
-
-            if (!(sr = SrSetupStaticSql(ref sql, sResourceConnString, out fLocalSql)).Succeeded)
-                return nDefaultValue;
-
             try
             {
-                nRet = sql.NExecuteScalar(s);
+                sql = SetupStaticSql(sql, sResourceConnString, out bool fLocalSql);
+                int nRet = sql.NExecuteScalar(s);
+                ReleaseStaticSql(ref sql, fLocalSql);
+
+                return nRet;
             }
             catch
             {
-                nRet = nDefaultValue;
-            }
-
-
-            if (!SrReleaseStaticSql(sr, ref sql, fLocalSql).Succeeded)
                 return nDefaultValue;
-
-            return nRet;
+            }
         }
 
-        /* E X E C U T E  N O N  Q U E R Y */
         /*----------------------------------------------------------------------------
-			%%Function: ExecuteNonQuery
-			%%Qualified: TCore.Sql.ExecuteNonQuery
-			%%Contact: rlittle
-
-		----------------------------------------------------------------------------*/
-        static public SR ExecuteNonQuery(string s, string sResourceConnString)
+            %%Function: ExecuteNonQuery
+            %%Qualified: TCore.Sql.ExecuteNonQuery
+        ----------------------------------------------------------------------------*/
+        public static void ExecuteNonQuery(string s, string sResourceConnString)
         {
-            return ExecuteNonQuery(null, s, sResourceConnString);
+            ExecuteNonQuery(null, s, sResourceConnString);
         }
 
-        /* N  E X E C U T E  S C A L A R */
         /*----------------------------------------------------------------------------
-			%%Function: NExecuteScalar
-			%%Qualified: BhSvc.Sql.NExecuteScalar
-			%%Contact: rlittle
+            %%Function: NExecuteScalar
+            %%Qualified: TCore.Sql.NExecuteScalar
 
-			Execute the scalar command, returning the result.  
-		----------------------------------------------------------------------------*/
+   			Execute the scalar command, returning the result.  
+        ----------------------------------------------------------------------------*/
         public int NExecuteScalar(string sQuery)
         {
             SqlCommand sqlcmd = this.Connection.CreateCommand();
@@ -216,12 +166,9 @@ namespace TCore
             return (int)sqlcmd.ExecuteScalar();
         }
 
-
-        /* S  E X E C U T E  S C A L A R */
         /*----------------------------------------------------------------------------
             %%Function: SExecuteScalar
-            %%Qualified: BhSvc.Sql.SExecuteScalar
-            %%Contact: rlittle
+            %%Qualified: TCore.Sql.SExecuteScalar
 
             Execute the scalar command, returning the result.  
         ----------------------------------------------------------------------------*/
@@ -234,6 +181,10 @@ namespace TCore
             return (string)sqlcmd.ExecuteScalar();
         }
 
+        /*----------------------------------------------------------------------------
+            %%Function: DttmExecuteScalar
+            %%Qualified: TCore.Sql.DttmExecuteScalar
+        ----------------------------------------------------------------------------*/
         public DateTime DttmExecuteScalar(string sQuery)
         {
             SqlCommand sqlcmd = this.Connection.CreateCommand();
@@ -252,122 +203,127 @@ namespace TCore
 			%%Contact: rlittle
 
 		----------------------------------------------------------------------------*/
-        public SR BeginTransaction()
+        public void BeginTransaction()
         {
-            if (m_sqlt != null)
-                return SR.Failed("Already in a transaction!");
+            if (InTransaction)
+                throw new TcSqlExceptionInTransaction("cannot nest transactions");
 
             m_sqlt = m_sqlc.BeginTransaction();
-            return SR.Success();
         }
 
-        public SR Rollback()
+        /*----------------------------------------------------------------------------
+            %%Function: Rollback
+            %%Qualified: TCore.Sql.Rollback
+        ----------------------------------------------------------------------------*/
+        public void Rollback()
         {
-            if (m_sqlt == null)
-                return SR.Failed("trying to rollback outside of a transaction");
+            if (!InTransaction)
+                throw new TcSqlExceptionNotInTransaction("can't rollback if not in transaction");
 
             m_sqlt.Rollback();
             m_sqlt = null;
-            return SR.Success();
         }
 
-        public SR Commit()
+        /*----------------------------------------------------------------------------
+            %%Function: Commit
+            %%Qualified: TCore.Sql.Commit
+        ----------------------------------------------------------------------------*/
+        public void Commit()
         {
-            if (m_sqlt == null)
-                return SR.Failed("trying to commit outside of a transaction");
+            if (!InTransaction)
+                throw new TcSqlExceptionNotInTransaction("can't commit if not in transaction");
 
             m_sqlt.Commit();
             m_sqlt = null;
-            return SR.Success();
         }
 
-        public SR Close()
+        /*----------------------------------------------------------------------------
+            %%Function: Close
+            %%Qualified: TCore.Sql.Close
+        ----------------------------------------------------------------------------*/
+        public void Close()
         {
-            if (m_sqlt != null)
-                return SR.Failed("trying to close with a pending transaction!");
+            if (InTransaction)
+                throw new TcSqlExceptionNotInTransaction("can't close with pending transaction");
 
             m_sqlc.Close();
-            return SR.Success();
         }
 
+        /*----------------------------------------------------------------------------
+            %%Function: CreateCommand
+            %%Qualified: TCore.Sql.CreateCommand
+        ----------------------------------------------------------------------------*/
         public SqlCommand CreateCommand()
         {
             return m_sqlc.CreateCommand();
         }
 
-        public SR ExecuteReader(string sQuery, out SqlReader sqlr, string sResourceConnString)
+        /*----------------------------------------------------------------------------
+            %%Function: ExecuteReader
+            %%Qualified: TCore.Sql.ExecuteReader
+        ----------------------------------------------------------------------------*/
+        public void ExecuteReader(string sQuery, out SqlReader sqlr, string sResourceConnString)
         {
             sqlr = new SqlReader(this);
 
-            return sqlr.ExecuteQuery(sQuery, sResourceConnString);
+            sqlr.ExecuteQuery(sQuery, sResourceConnString);
         }
 
-        /* E X E C U T E  Q U E R Y */
         /*----------------------------------------------------------------------------
-			%%Function: ExecuteQuery
-			%%Qualified: RwpSvc.Sql.ExecuteQuery
-			%%Contact: rlittle
-
-		----------------------------------------------------------------------------*/
-        public static SR ExecuteQuery(string sQuery, IQueryResult iqr, string sResourceConnString)
+            %%Function: ExecuteQuery
+            %%Qualified: TCore.Sql.ExecuteQuery
+        ----------------------------------------------------------------------------*/
+        public static void ExecuteQuery(string sQuery, IQueryResult iqr, string sResourceConnString)
         {
-            Sql sql;
+            Sql sql = Sql.OpenConnection(sResourceConnString);
 
-            SR sr = Sql.OpenConnection(out sql, sResourceConnString);
-
-            if (!sr.Result)
-                return sr;
-
-            return ExecuteQuery(sql, sQuery, iqr, sResourceConnString);
+            ExecuteQuery(sql, sQuery, iqr, sResourceConnString);
         }
 
-        /* E X E C U T E  Q U E R Y */
         /*----------------------------------------------------------------------------
-			%%Function: ExecuteQuery
-			%%Qualified: BhSvc.Sql.ExecuteQuery
-			%%Contact: rlittle
+            %%Function: ExecuteQuery
+            %%Qualified: TCore.Sql.ExecuteQuery
 
 			Execute the given query and send the results to IQueryResult...
-		----------------------------------------------------------------------------*/
-        public static SR ExecuteQuery(Sql sql, string sQuery, IQueryResult iqr, string sResourceConnString)
+        ----------------------------------------------------------------------------*/
+        public static void ExecuteQuery(Sql sql, string sQuery, IQueryResult iqr, string sResourceConnString)
         {
-            SR sr;
             SqlReader sqlr;
             int iRecordSet = 0;
 
             sqlr = new SqlReader(sql);
 
-            sr = sqlr.ExecuteQuery(sQuery, sResourceConnString);
-            if (!sr.Succeeded)
-                return sr;
+            sqlr.ExecuteQuery(sQuery, sResourceConnString);
 
             do
             {
                 while (sqlr.Reader.Read())
                 {
                     if (!iqr.FAddResultRow(sqlr, iRecordSet))
-                        return SR.Failed("FAddResultRow failed!");
+                        throw new TcSqlException("FAddResultRow failed!");
                 }
                 iRecordSet++;
             } while (sqlr.Reader.NextResult());
 
             sqlr.Close();
-            return sqlr.Result;
         }
 
 
-        /* S Q L I F Y */
         /*----------------------------------------------------------------------------
-			%%Function: Sqlify
-			%%Qualified: RwpSvc.Sql.Sqlify
-			%%Contact: rlittle
+            %%Function: Sqlify
+            %%Qualified: TCore.Sql.Sqlify
 
-		----------------------------------------------------------------------------*/
+            consider using command parameters
+        ----------------------------------------------------------------------------*/
         public static string Sqlify(string s)
         {
             return s.Replace("'", "''");
         }
 
+        /*----------------------------------------------------------------------------
+            %%Function: Nullable
+            %%Qualified: TCore.Sql.Nullable
+        ----------------------------------------------------------------------------*/
         public static string Nullable(string s)
         {
             if (s == null)
@@ -376,6 +332,10 @@ namespace TCore
                 return String.Format("'{0}'", s);
         }
 
+        /*----------------------------------------------------------------------------
+            %%Function: Nullable
+            %%Qualified: TCore.Sql.Nullable
+        ----------------------------------------------------------------------------*/
         public static string Nullable(int? n)
         {
             if (n == null)
@@ -384,6 +344,10 @@ namespace TCore
                 return String.Format("{0}", n.Value);
         }
 
+        /*----------------------------------------------------------------------------
+            %%Function: Nullable
+            %%Qualified: TCore.Sql.Nullable
+        ----------------------------------------------------------------------------*/
         public static string Nullable(bool? f)
         {
             if (f == null)
@@ -392,13 +356,10 @@ namespace TCore
                 return f.Value ? "1" : "0";
         }
 
-        /* N U L L A B L E */
         /*----------------------------------------------------------------------------
-			%%Function: Nullable
-			%%Qualified: tw.twsvc:SqlReader.Nullable
-			%%Contact: rlittle
-
-		----------------------------------------------------------------------------*/
+            %%Function: Nullable
+            %%Qualified: TCore.Sql.Nullable
+        ----------------------------------------------------------------------------*/
         public static string Nullable(DateTime? dttm)
         {
             if (dttm == null)
@@ -409,6 +370,10 @@ namespace TCore
                                      dttm.Value.Minute, dttm.Value.Second, dttm.Value.Millisecond);
         }
 
+        /*----------------------------------------------------------------------------
+            %%Function: Nullable
+            %%Qualified: TCore.Sql.Nullable
+        ----------------------------------------------------------------------------*/
         public static string Nullable(Guid? guid)
         {
             if (guid == null)
