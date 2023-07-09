@@ -32,15 +32,12 @@ namespace TCore
         {
             m_crids = crids;
             m_sql = sql;
-            SR sr = Sql.SrSetupStaticSql(ref m_sql, sConnectionString, out m_fLocal);
-
-            if (!sr.Succeeded)
-                throw new TcException(sr.Reason, m_crids);
+            m_sql = Sql.SetupStaticSql(m_sql, sConnectionString, out m_fLocal);
         }
 
         public void Close()
         {
-            Sql.SrReleaseStaticSql(SR.Success(), ref m_sql, m_fLocal);
+            Sql.ReleaseStaticSql(ref m_sql, m_fLocal);
         }
 
 #if USINGPARADIGM
