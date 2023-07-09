@@ -18,14 +18,11 @@
     <RepositoryUrl>https://github.com/rlittletht/TCore.Sql</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/rlittletht/TCore.Sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <FileVersion>1.4.0.0</FileVersion>
-    <PackageReleaseNotes>NO BREAKING CHANGES:
-Added SqlException, SqlQueryReadLine class.
-Changed to .net461
-
-</PackageReleaseNotes>
-    <Version>1.4.0</Version>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
+    <FileVersion>1.5.0.0</FileVersion>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <Version>1.5.0</Version>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
