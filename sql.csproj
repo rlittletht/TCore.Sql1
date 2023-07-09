@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-      <TargetFramework>net461</TargetFramework>
+      <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectGuid>{D2383C17-0D82-41B0-8C18-A14253C050C7}</ProjectGuid>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <ProjectGuid>{B9037ADE-F787-431B-B309-46219A06BF79}
+  </ProjectGuid>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -15,14 +15,14 @@
     <Company>Robert Little</Company>
     <Product>TCore.Sql</Product>
     <Description>Layer provides Sql query support on top of System.Data.SqlClient. Provides generic query building, transaction wrapping, and reading query results into obejcts.</Description>
-    <RepositoryUrl>https://github.com/rlittletht/TCore.Sql</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/rlittletht/TCore.Sql/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/rlittletht/TCore.Core.Sql</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/rlittletht/TCore.Core.Sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.5.0.0</AssemblyVersion>
-    <FileVersion>1.5.0.0</FileVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
-    <Version>1.5.0</Version>
+    <Version>2.0.0</Version>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
@@ -48,6 +48,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
     <ItemGroup>
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
       <PackageReference Include="NUnit" Version="3.12.0" />
       <PackageReference Include="TCore.Exceptions" Version="1.1.0" />
       <PackageReference Include="TCore.StatusResult" Version="2.0.0" />
