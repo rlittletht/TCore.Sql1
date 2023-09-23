@@ -47,7 +47,7 @@ namespace TCore
         {
             SqlConnection sqlc = new SqlConnection(sResourceConnString);
 
-                sqlc.Open();
+            sqlc.Open();
 
             return new Sql(sqlc, null);
         }
@@ -82,6 +82,19 @@ namespace TCore
         /*----------------------------------------------------------------------------
             %%Function: ExecuteNonQuery
             %%Qualified: TCore.Sql.ExecuteNonQuery
+        ----------------------------------------------------------------------------*/
+        public static void ExecuteNonQuery(
+            Sql sql,
+            SqlCommandTextInit cmdText,
+            string sResourceConnString,
+            CustomizeCommandDel customizeParams = null)
+        {
+            ExecuteNonQuery(sql, cmdText.CommandText, sResourceConnString, customizeParams, cmdText.Aliases);
+        }
+
+        /*----------------------------------------------------------------------------
+            %%Function: ExecuteNonQuery
+            %%Qualified: TCore.Sql.ExecuteNonQuery
 
 			Execute the given non query.  There is only a failed/success response
         ----------------------------------------------------------------------------*/
@@ -89,11 +102,15 @@ namespace TCore
             Sql sql,
             string s,
             string sResourceConnString,
-            CustomizeCommandDel customizeParams = null)
+            CustomizeCommandDel customizeParams = null,
+            Dictionary<string, string> aliases = null)
         {
             sql = SetupStaticSql(sql, sResourceConnString, out bool fLocalSql);
 
             SqlCommand sqlcmd = sql.CreateCommand();
+
+            if (aliases != null)
+                s = SqlWhere.ExpandAliases(s, aliases);
 
             sqlcmd.CommandText = s;
             if (customizeParams != null)
@@ -106,13 +123,26 @@ namespace TCore
             ReleaseStaticSql(ref sql, fLocalSql);
         }
 
+        public void ExecuteNonQuery(
+            SqlCommandTextInit cmdText,
+            CustomizeCommandDel customizeParams = null)
+        {
+            ExecuteNonQuery(cmdText.CommandText, customizeParams, cmdText.Aliases);
+        }
+
         /*----------------------------------------------------------------------------
             %%Function: ExecuteNonQuery
             %%Qualified: TCore.Sql.ExecuteNonQuery
         ----------------------------------------------------------------------------*/
-        public void ExecuteNonQuery(string s, CustomizeCommandDel customizeParams = null)
+        public void ExecuteNonQuery(
+            string s,
+            CustomizeCommandDel customizeParams = null,
+            Dictionary<string, string> aliases = null)
         {
             SqlCommand sqlcmd = CreateCommand();
+
+            if (aliases != null)
+                s = SqlWhere.ExpandAliases(s, aliases);
 
             sqlcmd.CommandText = s;
             if (customizeParams != null)
@@ -122,16 +152,30 @@ namespace TCore
             sqlcmd.ExecuteNonQuery();
         }
 
+        public static int NExecuteScalar(
+            Sql sql,
+            SqlCommandTextInit cmdText,
+            string sResourceConnString,
+            int nDefaultValue)
+        {
+            return NExecuteScalar(sql, cmdText.CommandText, sResourceConnString, nDefaultValue, cmdText.Aliases);
+        }
+
         /*----------------------------------------------------------------------------
             %%Function: NExecuteScalar
             %%Qualified: TCore.Sql.NExecuteScalar
         ----------------------------------------------------------------------------*/
-        public static int NExecuteScalar(Sql sql, string s, string sResourceConnString, int nDefaultValue)
+        public static int NExecuteScalar(
+            Sql sql,
+            string s,
+            string sResourceConnString,
+            int nDefaultValue,
+            Dictionary<string, string> aliases = null)
         {
             try
             {
                 sql = SetupStaticSql(sql, sResourceConnString, out bool fLocalSql);
-                int nRet = sql.NExecuteScalar(s);
+                int nRet = sql.NExecuteScalar(s, aliases);
                 ReleaseStaticSql(ref sql, fLocalSql);
 
                 return nRet;
@@ -142,13 +186,28 @@ namespace TCore
             }
         }
 
+        public static void ExecuteNonQuery(
+            SqlCommandTextInit cmdText,
+            string sResourceConnString)
+        {
+            ExecuteNonQuery(null, cmdText.CommandText, sResourceConnString, null, cmdText.Aliases);
+        }
+
         /*----------------------------------------------------------------------------
             %%Function: ExecuteNonQuery
             %%Qualified: TCore.Sql.ExecuteNonQuery
         ----------------------------------------------------------------------------*/
-        public static void ExecuteNonQuery(string s, string sResourceConnString)
+        public static void ExecuteNonQuery(
+            string s,
+            string sResourceConnString,
+            Dictionary<string, string> aliases = null)
         {
-            ExecuteNonQuery(null, s, sResourceConnString);
+            ExecuteNonQuery(null, s, sResourceConnString, null, aliases);
+        }
+
+        public int NExecuteScalar(SqlCommandTextInit cmdText)
+        {
+            return NExecuteScalar(cmdText.CommandText, cmdText.Aliases);
         }
 
         /*----------------------------------------------------------------------------
@@ -157,13 +216,20 @@ namespace TCore
 
    			Execute the scalar command, returning the result.  
         ----------------------------------------------------------------------------*/
-        public int NExecuteScalar(string sQuery)
+        public int NExecuteScalar(string sQuery, Dictionary<string, string> aliases = null)
         {
             SqlCommand sqlcmd = this.Connection.CreateCommand();
+            if (aliases != null)
+                sQuery = SqlWhere.ExpandAliases(sQuery, aliases);
             sqlcmd.CommandText = sQuery;
             sqlcmd.Transaction = this.Transaction;
 
             return (int)sqlcmd.ExecuteScalar();
+        }
+
+        public string SExecuteScalar(SqlCommandTextInit cmdText)
+        {
+            return SExecuteScalar(cmdText.CommandText, cmdText.Aliases);
         }
 
         /*----------------------------------------------------------------------------
@@ -172,22 +238,31 @@ namespace TCore
 
             Execute the scalar command, returning the result.  
         ----------------------------------------------------------------------------*/
-        public string SExecuteScalar(string sQuery)
+        public string SExecuteScalar(string sQuery, Dictionary<string, string> aliases = null)
         {
             SqlCommand sqlcmd = this.Connection.CreateCommand();
+            if (aliases != null)
+                sQuery = SqlWhere.ExpandAliases(sQuery, aliases);
             sqlcmd.CommandText = sQuery;
             sqlcmd.Transaction = this.Transaction;
 
             return (string)sqlcmd.ExecuteScalar();
         }
 
+        public DateTime DttmExecuteScalar(SqlCommandTextInit cmdText)
+        {
+            return DttmExecuteScalar(cmdText.CommandText, cmdText.Aliases);
+        }
+
         /*----------------------------------------------------------------------------
             %%Function: DttmExecuteScalar
             %%Qualified: TCore.Sql.DttmExecuteScalar
         ----------------------------------------------------------------------------*/
-        public DateTime DttmExecuteScalar(string sQuery)
+        public DateTime DttmExecuteScalar(string sQuery, Dictionary<string, string> aliases = null)
         {
             SqlCommand sqlcmd = this.Connection.CreateCommand();
+            if (aliases != null)
+                sQuery = SqlWhere.ExpandAliases(sQuery, aliases);
             sqlcmd.CommandText = sQuery;
             sqlcmd.Transaction = this.Transaction;
 
@@ -262,22 +337,30 @@ namespace TCore
             %%Function: ExecuteReader
             %%Qualified: TCore.Sql.ExecuteReader
         ----------------------------------------------------------------------------*/
-        public void ExecuteReader(string sQuery, out SqlReader sqlr, string sResourceConnString)
+        public void ExecuteReader(
+            string sQuery,
+            out SqlReader sqlr,
+            string sResourceConnString,
+            Dictionary<string, string> aliases = null)
         {
             sqlr = new SqlReader(this);
 
-            sqlr.ExecuteQuery(sQuery, sResourceConnString);
+            sqlr.ExecuteQuery(sQuery, sResourceConnString, null, aliases);
         }
 
         /*----------------------------------------------------------------------------
             %%Function: ExecuteQuery
             %%Qualified: TCore.Sql.ExecuteQuery
         ----------------------------------------------------------------------------*/
-        public static void ExecuteQuery(string sQuery, IQueryResult iqr, string sResourceConnString)
+        public static void ExecuteQuery(
+            string sQuery,
+            IQueryResult iqr,
+            string sResourceConnString, 
+            Dictionary<string, string> aliases = null)
         {
             Sql sql = Sql.OpenConnection(sResourceConnString);
 
-            ExecuteQuery(sql, sQuery, iqr, sResourceConnString);
+            ExecuteQuery(sql, sQuery, iqr, sResourceConnString, aliases);
         }
 
         /*----------------------------------------------------------------------------
@@ -286,14 +369,20 @@ namespace TCore
 
 			Execute the given query and send the results to IQueryResult...
         ----------------------------------------------------------------------------*/
-        public static void ExecuteQuery(Sql sql, string sQuery, IQueryResult iqr, string sResourceConnString)
+        public static void ExecuteQuery(
+            Sql sql,
+            string sQuery,
+            IQueryResult iqr,
+            string sResourceConnString,
+            Dictionary<string, string> aliases = null,
+            CustomizeCommandDel customizeDel = null)
         {
             SqlReader sqlr;
             int iRecordSet = 0;
 
             sqlr = new SqlReader(sql);
 
-            sqlr.ExecuteQuery(sQuery, sResourceConnString);
+            sqlr.ExecuteQuery(sQuery, sResourceConnString, customizeDel, aliases);
 
             do
             {

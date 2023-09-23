@@ -143,9 +143,9 @@ namespace TCore
 			%%Contact: rlittle
 
 		----------------------------------------------------------------------------*/
-        public string LookupAlias(string sTable)
+        public static string LookupAlias(string sTable, Dictionary<string, string> aliases)
         {
-            foreach (System.Collections.DictionaryEntry de in (System.Collections.IDictionary) m_mpAliases)
+            foreach (System.Collections.DictionaryEntry de in (System.Collections.IDictionary) aliases)
             {
                 if (String.Compare((string) de.Value, sTable) == 0)
                     return (string) de.Key;
@@ -154,20 +154,18 @@ namespace TCore
             return null;
         }
 
-        /* E X P A N D  A L I A S E S */
         /*----------------------------------------------------------------------------
-			%%Function: ExpandAliases
-			%%Qualified: BhSvc.SqlWhere.ExpandAliases
-			%%Contact: rlittle
-		 
+            %%Function: ExpandAliases
+            %%Qualified: TCore.SqlWhere.ExpandAliases
+
 		    given alias: "TBLO" -> "tblOuter"
 		 
 		    $$tblOuter$$ becomes "TBLO"
 		    $$#tblOuter$$ becomes "tblOuter TBLO"
-		----------------------------------------------------------------------------*/
-        public string ExpandAliases(string s)
+        ----------------------------------------------------------------------------*/
+        public static string ExpandAliases(string s, Dictionary<string, string> aliases)
         {
-            if (m_mpAliases == null || m_mpAliases.Keys.Count == 0)
+            if (aliases == null || aliases.Keys.Count == 0)
                 return s;
 
             int ich;
@@ -182,7 +180,7 @@ namespace TCore
                 int ichAdjust = s.Substring(ich + 2, 1) == "#" ? 1 : 0;
                 ich += ichAdjust;
                 string sTable = s.Substring(ich + 2, ichLast - ich - 2);
-                string sAlias = LookupAlias(sTable);
+                string sAlias = LookupAlias(sTable, aliases);
 
                 if (sAlias == null)
                     throw new Exception(String.Format("table {0} has no alias registered", sTable));
@@ -192,6 +190,15 @@ namespace TCore
             }
 
             return s;
+        }
+
+        /*----------------------------------------------------------------------------
+            %%Function: ExpandAliases
+            %%Qualified: TCore.SqlWhere.ExpandAliases
+        ----------------------------------------------------------------------------*/
+        public string ExpandAliases(string s)
+        {
+            return ExpandAliases(s, m_mpAliases);
         }
 
         /* A D D */

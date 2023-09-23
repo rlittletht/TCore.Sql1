@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using Microsoft.Data.SqlClient;
 using TCore;
@@ -48,11 +49,23 @@ namespace TCore
                 m_fAttached = true;
         }
 
+        public void ExecuteQuery(
+            SqlCommandTextInit cmdText,
+            string sResourceConnString,
+            CustomizeCommandDel customizeDel = null)
+        {
+            ExecuteQuery(cmdText.CommandText, sResourceConnString, customizeDel, cmdText.Aliases);
+        }
+
         /*----------------------------------------------------------------------------
             %%Function: ExecuteQuery
             %%Qualified: TCore.SqlReader.ExecuteQuery
         ----------------------------------------------------------------------------*/
-        public void ExecuteQuery(string sQuery, string sResourceConnString)
+        public void ExecuteQuery(
+            string sQuery,
+            string sResourceConnString,
+            CustomizeCommandDel customizeDel = null, 
+            Dictionary<string, string> aliases = null)
         {
             if (m_sql == null)
             {
@@ -67,6 +80,9 @@ namespace TCore
             sqlcmd.CommandText = sQuery;
             sqlcmd.Transaction = m_sql.Transaction;
 
+            if (customizeDel != null)
+                customizeDel(sqlcmd);
+
             if (m_sqlr != null)
                 m_sqlr.Close();
 
@@ -77,6 +93,51 @@ namespace TCore
             catch (Exception exc)
             {
                 throw new TcSqlException(m_crids, exc, "caught exception executing reader");
+            }
+        }
+
+        public delegate void DelegateReader<T>(SqlReader sqlr, Guid crids, ref T t);
+
+        /*----------------------------------------------------------------------------
+            %%Function: DoGenericQueryDelegateRead
+            %%Qualified: TCore.SqlReader.DoGenericQueryDelegateRead<T>
+        ----------------------------------------------------------------------------*/
+        public static T DoGenericQueryDelegateRead<T>(
+            Sql sql,
+            Guid crids,
+            string sQuery,
+            DelegateReader<T> delegateReader,
+            TCore.CustomizeCommandDel customizeDel = null) where T: new()
+        {
+            SqlReader sqlr = null;
+
+            if (delegateReader == null)
+                throw new ArgumentNullException("must provide delegate reader");
+
+            try
+            {
+                string sCmd = sQuery;
+
+                sqlr = new(sql);
+                sqlr.ExecuteQuery(sQuery, null, customizeDel);
+
+                T t = new();
+                bool fOnce = false;
+
+                while (sqlr.Reader.Read())
+                {
+                    delegateReader(sqlr, crids, ref t);
+                    fOnce = true;
+                }
+
+                if (!fOnce)
+                    throw new TcSqlExceptionNoResults();
+
+                return t;
+            }
+            finally
+            {
+                sqlr?.Close();
             }
         }
 
