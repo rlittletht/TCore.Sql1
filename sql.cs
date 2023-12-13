@@ -12,7 +12,7 @@ using TCore.Exceptions;
 
 namespace TCore
 {
-    public delegate void CustomizeCommandDel(SqlCommand command);
+    public delegate void CustomizeCommandDelegate(SqlCommand command);
 
     // ===============================================================================
     //  I  Q U E R Y  R E S U L T 
@@ -86,7 +86,7 @@ namespace TCore
             Sql sql,
             SqlCommandTextInit cmdText,
             string sResourceConnString,
-            CustomizeCommandDel customizeParams = null)
+            CustomizeCommandDelegate customizeParams = null)
         {
             ExecuteNonQuery(sql, cmdText.CommandText, sResourceConnString, customizeParams, cmdText.Aliases);
         }
@@ -101,7 +101,7 @@ namespace TCore
             Sql sql,
             string s,
             string sResourceConnString,
-            CustomizeCommandDel customizeParams = null,
+            CustomizeCommandDelegate customizeParams = null,
             Dictionary<string, string> aliases = null)
         {
             sql = SetupStaticSql(sql, sResourceConnString, out bool fLocalSql);
@@ -124,7 +124,7 @@ namespace TCore
 
         public void ExecuteNonQuery(
             SqlCommandTextInit cmdText,
-            CustomizeCommandDel customizeParams = null)
+            CustomizeCommandDelegate customizeParams = null)
         {
             ExecuteNonQuery(cmdText.CommandText, customizeParams, cmdText.Aliases);
         }
@@ -135,7 +135,7 @@ namespace TCore
         ----------------------------------------------------------------------------*/
         public void ExecuteNonQuery(
             string s,
-            CustomizeCommandDel customizeParams = null,
+            CustomizeCommandDelegate customizeParams = null,
             Dictionary<string, string> aliases = null)
         {
             SqlCommand sqlcmd = CreateCommand();
@@ -321,6 +321,7 @@ namespace TCore
                 throw new TcSqlExceptionNotInTransaction("can't close with pending transaction");
 
             m_sqlc.Close();
+            m_sqlc.Dispose();
         }
 
         /*----------------------------------------------------------------------------
@@ -374,14 +375,14 @@ namespace TCore
             IQueryResult iqr,
             string sResourceConnString,
             Dictionary<string, string> aliases = null,
-            CustomizeCommandDel customizeDel = null)
+            CustomizeCommandDelegate customizeDelegate = null)
         {
             SqlReader sqlr;
             int iRecordSet = 0;
 
             sqlr = new SqlReader(sql);
 
-            sqlr.ExecuteQuery(sQuery, sResourceConnString, customizeDel, aliases);
+            sqlr.ExecuteQuery(sQuery, sResourceConnString, customizeDelegate, aliases);
 
             do
             {

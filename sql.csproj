@@ -20,14 +20,15 @@
     <RepositoryUrl>https://github.com/rlittletht/TCore.Core.Sql</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/rlittletht/TCore.Core.Sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.2.2.0</AssemblyVersion>
-    <FileVersion>2.2.2.0</FileVersion>
+    <AssemblyVersion>2.2.3.0</AssemblyVersion>
+    <FileVersion>2.2.3.0</FileVersion>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
-    <Version>2.2.2</Version>
+    <Version>2.2.3</Version>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
+    <IncludeSymbols>False</IncludeSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
