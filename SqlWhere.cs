@@ -143,9 +143,9 @@ namespace TCore
 			%%Contact: rlittle
 
 		----------------------------------------------------------------------------*/
-        public static string LookupAlias(string sTable, Dictionary<string, string> aliases)
+        public static string LookupAlias(string sTable, Dictionary<string, string> mapAliasToTable)
         {
-            foreach (System.Collections.DictionaryEntry de in (System.Collections.IDictionary) aliases)
+            foreach (System.Collections.DictionaryEntry de in (System.Collections.IDictionary) mapAliasToTable)
             {
                 if (String.Compare((string) de.Value, sTable) == 0)
                     return (string) de.Key;

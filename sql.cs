@@ -295,6 +295,7 @@ namespace TCore
                 throw new TcSqlExceptionNotInTransaction("can't rollback if not in transaction");
 
             m_sqlt.Rollback();
+            m_sqlt.Dispose();
             m_sqlt = null;
         }
 
