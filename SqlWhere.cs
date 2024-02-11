@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -41,7 +42,7 @@ namespace TCore
         {
             string sAlias = String.Format("S{0}", m_mpAliases.Count);
 
-            m_mpAliases.Add(sAlias, sTable);
+            m_mpAliases.Add(sTable, sAlias);
             return sAlias;
         }
 
@@ -70,7 +71,7 @@ namespace TCore
 		----------------------------------------------------------------------------*/
         public string AddAlias(string sTable, string sAlias)
         {
-            m_mpAliases.Add(sAlias, sTable);
+            m_mpAliases.Add(sTable, sAlias);
 
             return sAlias;
         }
@@ -136,19 +137,27 @@ namespace TCore
             m_plc.Add(c);
         }
 
-        /* L O O K U P  A L I A S */
         /*----------------------------------------------------------------------------
-			%%Function: LookupAlias
-			%%Qualified: BhSvc.SqlWhere.LookupAlias
-			%%Contact: rlittle
-
-		----------------------------------------------------------------------------*/
-        public static string LookupAlias(string sTable, Dictionary<string, string> mapAliasToTable)
+            %%Function: LookupAliasFromAliasToTableMap
+            %%Qualified: TCore.SqlWhere.LookupAliasFromAliasToTableMap
+        ----------------------------------------------------------------------------*/
+        private static string LookupAliasFromAliasToTableMap(string sTable, Dictionary<string, string> mapAliasToTable)
         {
             foreach (System.Collections.DictionaryEntry de in (System.Collections.IDictionary) mapAliasToTable)
             {
                 if (String.Compare((string) de.Value, sTable) == 0)
                     return (string) de.Key;
+            }
+
+            return null;
+        }
+
+        private static string LookupAliasFromTableToAliasMap(string sTable, Dictionary<string, string> mapTableToAlias)
+        {
+            foreach (System.Collections.DictionaryEntry de in (System.Collections.IDictionary)mapTableToAlias)
+            {
+                if (String.Compare((string)de.Key, sTable) == 0)
+                    return (string)de.Value;
             }
 
             return null;
@@ -163,12 +172,21 @@ namespace TCore
 		    $$tblOuter$$ becomes "TBLO"
 		    $$#tblOuter$$ becomes "tblOuter TBLO"
         ----------------------------------------------------------------------------*/
-        public static string ExpandAliases(string s, Dictionary<string, string> aliases)
+        public static string ExpandAliases(string s, Dictionary<string, string> mapUnknownDirection, TriState tUseBrokenMap = TriState.No)
         {
-            if (aliases == null || aliases.Keys.Count == 0)
+            if (mapUnknownDirection == null || mapUnknownDirection.Keys.Count == 0)
                 return s;
 
             int ich;
+
+            if (tUseBrokenMap == TriState.Maybe)
+            {
+                string sKey = mapUnknownDirection.Keys.FirstOrDefault();
+
+                // if the key length is shorter than the value, then the key is likely the alias name, not the table
+                // name
+                tUseBrokenMap = sKey.Length < mapUnknownDirection[sKey].Length ? TriState.Yes : TriState.No;
+            }
 
             while ((ich = s.IndexOf("$$")) != -1)
             {
@@ -180,7 +198,10 @@ namespace TCore
                 int ichAdjust = s.Substring(ich + 2, 1) == "#" ? 1 : 0;
                 ich += ichAdjust;
                 string sTable = s.Substring(ich + 2, ichLast - ich - 2);
-                string sAlias = LookupAlias(sTable, aliases);
+                string sAlias =
+                    tUseBrokenMap == TriState.Yes
+                        ? LookupAliasFromAliasToTableMap(sTable, mapUnknownDirection)
+                        : LookupAliasFromTableToAliasMap(sTable, mapUnknownDirection);
 
                 if (sAlias == null)
                     throw new Exception(String.Format("table {0} has no alias registered", sTable));
@@ -198,7 +219,7 @@ namespace TCore
         ----------------------------------------------------------------------------*/
         public string ExpandAliases(string s)
         {
-            return ExpandAliases(s, m_mpAliases);
+            return ExpandAliases(s, m_mpAliases, TriState.No);
         }
 
         /* A D D */

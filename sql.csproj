@@ -20,11 +20,11 @@
     <RepositoryUrl>https://github.com/rlittletht/TCore.Core.Sql</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/rlittletht/TCore.Core.Sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.2.3.0</AssemblyVersion>
-    <FileVersion>2.2.3.0</FileVersion>
+    <AssemblyVersion>2.2.4.0</AssemblyVersion>
+    <FileVersion>2.2.4.0</FileVersion>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
-    <Version>2.2.3</Version>
+    <Version>2.2.4</Version>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
@@ -60,7 +60,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
       <PackageReference Include="NUnit" Version="3.12.0" />
       <PackageReference Include="TCore.Exceptions" Version="1.1.0" />
       <PackageReference Include="TCore.StatusResult" Version="2.0.0" />
