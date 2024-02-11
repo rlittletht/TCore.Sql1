@@ -12,7 +12,7 @@ namespace TCore
     // Basic exception for our WebApi to allow us to differentiate exceptions
     public class TcSqlException : TcException
     {
-        public TcSqlException() : base(Guid.Empty) { }
+        public TcSqlException() : base(Guid.Empty, "unknown sql excelption") { }
         public TcSqlException(Guid crids) : base(crids) { }
         public TcSqlException(string errorMessage) : base(errorMessage) { }
         public TcSqlException(string errorMessage, Exception innerException) : base(errorMessage, innerException) { }
@@ -23,7 +23,7 @@ namespace TCore
     // Exception when the result set did not contain a single row
     public class TcSqlExceptionNotSingleRow : TcSqlException
     {
-        public TcSqlExceptionNotSingleRow() : base(Guid.Empty) { }
+        public TcSqlExceptionNotSingleRow() : base(Guid.Empty, "TcSqlExceptionNotSingleRow") { }
         public TcSqlExceptionNotSingleRow(Guid crids) : base(crids) { }
         public TcSqlExceptionNotSingleRow(string errorMessage) : base(errorMessage) { }
         public TcSqlExceptionNotSingleRow(string errorMessage, Exception innerException) : base(errorMessage, innerException) { }
@@ -33,7 +33,7 @@ namespace TCore
 
     public class TcSqlExceptionNoResults : TcSqlException
     {
-        public TcSqlExceptionNoResults() : base(Guid.Empty) { }
+        public TcSqlExceptionNoResults() : base(Guid.Empty, "TcSqlExceptionNoResults") { }
         public TcSqlExceptionNoResults(Guid crids) : base(crids) { }
         public TcSqlExceptionNoResults(string errorMessage) : base(errorMessage) { }
         public TcSqlExceptionNoResults(string errorMessage, Exception innerException) : base(errorMessage, innerException) { }
@@ -43,7 +43,7 @@ namespace TCore
 
     public class TcSqlExceptionInTransaction : TcSqlException
     {
-        public TcSqlExceptionInTransaction() : base(Guid.Empty) { }
+        public TcSqlExceptionInTransaction() : base(Guid.Empty, "TcSqlExceptionInTransaction") { }
         public TcSqlExceptionInTransaction(Guid crids) : base(crids) { }
         public TcSqlExceptionInTransaction(string errorMessage) : base(errorMessage) { }
         public TcSqlExceptionInTransaction(string errorMessage, Exception innerException) : base(errorMessage, innerException) { }
@@ -53,7 +53,7 @@ namespace TCore
 
     public class TcSqlExceptionNotInTransaction : TcSqlException
     {
-        public TcSqlExceptionNotInTransaction() : base(Guid.Empty) { }
+        public TcSqlExceptionNotInTransaction() : base(Guid.Empty, "TcSqlExceptionNotInTransaction") { }
         public TcSqlExceptionNotInTransaction(Guid crids) : base(crids) { }
         public TcSqlExceptionNotInTransaction(string errorMessage) : base(errorMessage) { }
         public TcSqlExceptionNotInTransaction(string errorMessage, Exception innerException) : base(errorMessage, innerException) { }

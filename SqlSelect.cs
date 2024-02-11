@@ -68,6 +68,15 @@ namespace TCore
             m_sw = new SqlWhere();
         }
 
+        public SqlSelect(SqlCommandTextInit cmdText)
+        {
+            m_sBase = cmdText.CommandText;
+            m_sw = new SqlWhere();
+
+            if (cmdText.Aliases != null)
+                m_sw.AddAliases(cmdText.Aliases);
+        }
+
         public SqlSelect(string sBase, Dictionary<string, string> mpAliases)
         {
             m_sBase = sBase;
